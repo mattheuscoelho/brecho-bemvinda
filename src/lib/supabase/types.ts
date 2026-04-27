@@ -68,6 +68,33 @@ export type Database = {
           },
         ]
       }
+      admin_logs: {
+        Row: {
+          action: string
+          created_at: string
+          entity_id: string | null
+          entity_name: string | null
+          entity_type: string | null
+          id: string
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          entity_id?: string | null
+          entity_name?: string | null
+          entity_type?: string | null
+          id?: string
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          entity_id?: string | null
+          entity_name?: string | null
+          entity_type?: string | null
+          id?: string
+        }
+        Relationships: []
+      }
       store_settings: {
         Row: {
           address: string
@@ -299,6 +326,7 @@ export type ProductInsert = Database["public"]["Tables"]["products"]["Insert"]
 export type ProductUpdate = Database["public"]["Tables"]["products"]["Update"]
 export type ProductCondition = Database["public"]["Enums"]["product_condition"]
 export type StoreSettings = Database["public"]["Tables"]["store_settings"]["Row"]
+export type AdminLog = Database["public"]["Tables"]["admin_logs"]["Row"]
 
 export type ProductWithImages = Product & {
   product_images: Pick<ProductImage, "id" | "url" | "display_order">[]

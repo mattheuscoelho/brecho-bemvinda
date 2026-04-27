@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Loader2, Check } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { logAdminAction } from "@/lib/data/admin-logs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -57,6 +58,7 @@ export default function ConfiguracoesPage() {
     if (error) {
       setError("Erro ao salvar. Tente novamente.");
     } else {
+      await logAdminAction({ action: "update_settings", entity_type: "settings" });
       setSaved(true);
     }
 

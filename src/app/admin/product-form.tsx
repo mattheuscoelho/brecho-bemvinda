@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select } from "@/components/ui/select";
 import { CONDITION_OPTIONS } from "@/lib/constants";
+import { logAdminAction } from "@/lib/data/admin-logs";
 import type { Category, ProductWithImages, ProductCondition } from "@/lib/supabase/types";
 import type { ProductStatus } from "@/lib/constants";
 
@@ -147,6 +148,13 @@ export function ProductForm({ product, categories }: ProductFormProps) {
 
         if (updateError) throw new Error("Erro ao atualizar produto.");
 
+        await logAdminAction({
+          action: "update_product",
+          entity_type: "product",
+          entity_id: product.id,
+          entity_name: productData.name,
+        });
+
         // Delete removed images
         if (removedIds.length > 0) {
           // Delete storage files (best-effort)
@@ -189,6 +197,13 @@ export function ProductForm({ product, categories }: ProductFormProps) {
             }))
           );
         }
+
+        await logAdminAction({
+          action: "create_product",
+          entity_type: "product",
+          entity_id: newProduct.id,
+          entity_name: productData.name,
+        });
       }
 
       router.push("/admin");

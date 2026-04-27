@@ -1,11 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { Flower2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+
+const BACKOFF_SECONDS = [0, 0, 0, 10, 30, 60]; // após 3 falhas: 10s, 30s, 60s
 
 export default function LoginPage() {
   const router = useRouter();
@@ -13,20 +15,43 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [failures, setFailures] = useState(0);
+  const [cooldown, setCooldown] = useState(0);
+  const cooldownRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  useEffect(() => {
+    if (cooldown <= 0) return;
+    cooldownRef.current = setInterval(() => {
+      setCooldown((s) => {
+        if (s <= 1) {
+          clearInterval(cooldownRef.current!);
+          return 0;
+        }
+        return s - 1;
+      });
+    }, 1000);
+    return () => clearInterval(cooldownRef.current!);
+  }, [cooldown]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (cooldown > 0) return;
     setError("");
     setLoading(true);
 
     const supabase = createClient();
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
 
     if (error) {
-      setError("Email ou senha incorretos.");
+      const newFailures = failures + 1;
+      setFailures(newFailures);
+      const wait = BACKOFF_SECONDS[Math.min(newFailures, BACKOFF_SECONDS.length - 1)];
+      if (wait > 0) {
+        setCooldown(wait);
+        setError(`Muitas tentativas. Aguarde ${wait}s antes de tentar novamente.`);
+      } else {
+        setError("Email ou senha incorretos.");
+      }
       setLoading(false);
       return;
     }
@@ -73,8 +98,8 @@ export default function LoginPage() {
             <p className="text-sm text-destructive text-center">{error}</p>
           )}
 
-          <Button type="submit" disabled={loading} className="mt-2">
-            {loading ? "Entrando..." : "Entrar"}
+          <Button type="submit" disabled={loading || cooldown > 0} className="mt-2">
+            {loading ? "Entrando..." : cooldown > 0 ? `Aguarde ${cooldown}s` : "Entrar"}
           </Button>
         </form>
       </div>

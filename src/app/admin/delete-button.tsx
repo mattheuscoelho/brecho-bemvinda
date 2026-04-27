@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Trash2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { logAdminAction } from "@/lib/data/admin-logs";
 import { Button } from "@/components/ui/button";
 
 interface DeleteProductButtonProps {
@@ -31,6 +32,12 @@ export function DeleteProductButton({ productId, productName }: DeleteProductBut
       setConfirming(false);
       return;
     }
+
+    await logAdminAction({
+      action: "delete_product",
+      entity_type: "product",
+      entity_name: productName,
+    });
 
     router.refresh();
     setConfirming(false);

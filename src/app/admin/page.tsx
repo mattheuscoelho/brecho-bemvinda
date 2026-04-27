@@ -6,14 +6,33 @@ import { formatPrice } from "@/lib/utils";
 import { PRODUCT_CONDITION_LABELS } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
 import { DeleteProductButton } from "./delete-button";
+import { createClient } from "@/lib/supabase/server";
 import type { Metadata } from "next";
+import type { AdminLog } from "@/lib/supabase/types";
 
 export const metadata: Metadata = {
   title: "Painel Admin",
 };
 
+const ACTION_LABELS: Record<string, string> = {
+  create_product: "Produto criado",
+  update_product: "Produto editado",
+  delete_product: "Produto excluído",
+  update_settings: "Configurações salvas",
+};
+
+async function getRecentLogs(): Promise<AdminLog[]> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("admin_logs")
+    .select("*")
+    .order("created_at", { ascending: false })
+    .limit(8);
+  return (data as AdminLog[]) ?? [];
+}
+
 export default async function AdminPage() {
-  const products = await getAllProducts();
+  const [products, logs] = await Promise.all([getAllProducts(), getRecentLogs()]);
 
   return (
     <div className="mx-auto max-w-lg">
@@ -107,6 +126,32 @@ export default async function AdminPage() {
               </div>
             );
           })}
+        </div>
+      )}
+      {/* Atividade recente */}
+      {logs.length > 0 && (
+        <div className="mt-8">
+          <h2 className="mb-3 text-sm font-medium text-muted-foreground">Atividade recente</h2>
+          <div className="flex flex-col gap-1">
+            {logs.map((log) => (
+              <div key={log.id} className="flex items-center justify-between rounded-lg px-3 py-2 text-xs hover:bg-muted/50">
+                <span className="text-foreground">
+                  {ACTION_LABELS[log.action] ?? log.action}
+                  {log.entity_name && (
+                    <span className="ml-1 text-muted-foreground">— {log.entity_name}</span>
+                  )}
+                </span>
+                <span className="text-muted-foreground/60 shrink-0 ml-3">
+                  {new Date(log.created_at).toLocaleDateString("pt-BR", {
+                    day: "2-digit",
+                    month: "2-digit",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </span>
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </div>

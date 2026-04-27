@@ -1,26 +1,67 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Paleta Bemvinda */
+  --color-bege: #FAF0E8;
+  --color-rosa-claro: #F2B8B0;
+  --color-salmao: #E8967A;
+  --color-rosa: #E87A8C;
+  --color-teal: #7DC4B8;
+  --color-verde: #A8C89A;
+
+  /* Semânticas */
+  --color-background: #FAF0E8;
+  --color-foreground: #3D2C2E;
+  --color-muted: #F5E6DA;
+  --color-muted-foreground: #8B7355;
+  --color-border: #E8D5C4;
+  --color-primary: #E87A8C;
+  --color-primary-foreground: #FFFFFF;
+  --color-accent: #7DC4B8;
+  --color-accent-foreground: #1A3A35;
+  --color-destructive: #DC2626;
+  --color-destructive-foreground: #FFFFFF;
+  --color-card: #FFFFFF;
+  --color-card-foreground: #3D2C2E;
+  --color-input: #E8D5C4;
+  --color-ring: #E87A8C;
+  --color-success: #A8C89A;
+
+  /* Tipografia */
+  --font-display: "Playfair Display", serif;
+  --font-body: "Inter", sans-serif;
+
+  /* Radius */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-full: 9999px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+/* Reset e base */
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Scrollbar sutil */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}
+
+/* Focus ring padrão */
+*:focus-visible {
+  outline: 2px solid var(--color-ring);
+  outline-offset: 2px;
 }

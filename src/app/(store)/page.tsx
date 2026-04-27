@@ -10,15 +10,15 @@ export default function HomePage() {
   return (
     <div className="mx-auto max-w-5xl px-4 py-8">
       {/* Hero */}
-      <section className="mb-12 text-center">
-        <Flower2 className="mx-auto mb-4 h-10 w-10 text-rosa-claro" />
-        <h1 className="font-display text-3xl text-foreground sm:text-4xl">
+      <section className="mb-16 py-16 sm:py-24 text-center">
+        <span className="block text-3xl text-rosa-claro select-none mb-6" aria-hidden>✿</span>
+        <h1 className="font-script text-5xl text-foreground sm:text-6xl">
           {STORE.name}
         </h1>
-        <p className="mt-2 text-sm text-muted-foreground">
+        <p className="mt-5 text-xs uppercase tracking-[0.25em] text-muted-foreground">
           Peças únicas com história e encanto
         </p>
-        <p className="mt-1 text-xs text-muted-foreground/70">
+        <p className="mt-3 text-xs text-muted-foreground/60">
           {STORE.address} · {STORE.hours}
         </p>
       </section>

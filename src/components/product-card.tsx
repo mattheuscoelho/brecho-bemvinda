@@ -16,7 +16,7 @@ export function ProductCard({ product }: ProductCardProps) {
   return (
     <Link
       href={`/p/${product.id}`}
-      className="group block overflow-hidden rounded-xl bg-card border border-border transition-shadow hover:shadow-md"
+      className="group block overflow-hidden rounded-xl bg-card shadow-sm transition-shadow hover:shadow-md"
     >
       <div className="relative aspect-square overflow-hidden bg-muted">
         {coverImage ? (
@@ -58,7 +58,7 @@ export function ProductCard({ product }: ProductCardProps) {
         <h3 className="text-sm font-medium text-foreground line-clamp-1 group-hover:text-rosa transition-colors">
           {product.name}
         </h3>
-        <p className="mt-1 font-display text-base text-rosa">
+        <p className="mt-1 font-script text-lg text-rosa">
           {formatPrice(product.price)}
         </p>
       </div>

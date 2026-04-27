@@ -1,4 +1,3 @@
-import { Flower2 } from "lucide-react";
 import { STORE } from "@/lib/constants";
 
 export function Footer() {
@@ -7,8 +6,8 @@ export function Footer() {
       <div className="mx-auto max-w-5xl px-4 py-8">
         <div className="flex flex-col items-center gap-4 text-center sm:flex-row sm:justify-between sm:text-left">
           <div className="flex items-center gap-2">
-            <Flower2 className="h-5 w-5 text-rosa-claro" />
-            <span className="font-display text-base text-rosa">
+            <span className="text-rosa-claro text-lg leading-none select-none" aria-hidden>✿</span>
+            <span className="font-script text-lg text-rosa">
               {STORE.name}
             </span>
           </div>

@@ -58,7 +58,7 @@ export function Hero({ whatsapp }: HeroProps) {
       {/* ── Hero Desktop ── */}
       <section
         className="relative overflow-hidden flex items-center justify-center max-md:hidden"
-        style={{ background: "#FAF0E8", minHeight: "420px", padding: "60px 56px" }}
+        style={{ background: "#FAF0E8", minHeight: "580px", padding: "80px 56px" }}
       >
         {/* Blobs decorativos */}
         <div className="blob" style={{ width: 400, height: 320, top: -120, left: -100, background: "#F2B8B0", opacity: 0.42 }} />
@@ -78,23 +78,23 @@ export function Hero({ whatsapp }: HeroProps) {
         <Sparkle size={16} style={{ top: 16, right: 370 }} color="#F2B8B0" />
 
         {/* Conteúdo */}
-        <div className="relative z-10 text-center" style={{ maxWidth: "560px" }}>
-          <p className="font-display italic text-[13px] text-[#b08880] uppercase tracking-[3px] mb-[14px]">
+        <div className="relative z-10 text-center" style={{ maxWidth: "640px" }}>
+          <p className="font-display italic text-[14px] text-[#b08880] uppercase tracking-[3px] mb-[18px]">
             primavera · 2026
           </p>
-          <h1 className="font-display text-[68px] text-escuro font-normal" style={{ lineHeight: 0.95, letterSpacing: "-1px" }}>
+          <h1 className="font-display text-[88px] text-escuro font-normal" style={{ lineHeight: 0.92, letterSpacing: "-2px" }}>
             Peças únicas
           </h1>
-          <p className="font-script text-[56px] text-rosa" style={{ lineHeight: 1.1, margin: "4px 0 10px" }}>
+          <p className="font-script text-[72px] text-rosa" style={{ lineHeight: 1.1, margin: "6px 0 14px" }}>
             com história
           </p>
-          <p className="font-body text-[14px] text-[#8a6a60] leading-[1.7] mb-[26px]">
+          <p className="font-body text-[16px] text-[#8a6a60] leading-[1.7] mb-[32px]">
             Moda vintage selecionada com carinho<br />no coração do Centro.
           </p>
-          <div className="flex items-center justify-center gap-3 flex-wrap">
+          <div className="flex items-center justify-center gap-4 flex-wrap">
             <a
               href="#catalogo"
-              className="font-body text-[13px] font-bold text-white px-7 py-[11px] rounded-[26px] no-underline transition-all duration-300 hover:-translate-y-0.5 hover:scale-[1.03] active:scale-[0.97]"
+              className="font-body text-[15px] font-bold text-white px-8 py-[13px] rounded-[26px] no-underline transition-all duration-300 hover:-translate-y-0.5 hover:scale-[1.03] active:scale-[0.97]"
               style={{
                 background: "#E87A8C",
                 boxShadow: "0 4px 16px rgba(232,122,140,0.3)",
@@ -107,7 +107,7 @@ export function Hero({ whatsapp }: HeroProps) {
               href={`https://wa.me/${phone}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="font-body text-[13px] font-bold text-rosa px-7 py-[11px] rounded-[26px] no-underline transition-all duration-300 hover:-translate-y-0.5 hover:scale-[1.03] hover:bg-rosa hover:text-white active:scale-[0.97]"
+              className="font-body text-[15px] font-bold text-rosa px-8 py-[13px] rounded-[26px] no-underline transition-all duration-300 hover:-translate-y-0.5 hover:scale-[1.03] hover:bg-rosa hover:text-white active:scale-[0.97]"
               style={{
                 background: "#fff",
                 border: "1.5px solid #E87A8C",

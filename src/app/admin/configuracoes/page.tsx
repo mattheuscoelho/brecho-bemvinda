@@ -70,7 +70,7 @@ export default function ConfiguracoesPage() {
 
   if (loading) {
     return (
-      <div className="mx-auto max-w-lg flex items-center justify-center py-12">
+      <div className="mx-auto max-w-2xl flex items-center justify-center py-12">
         <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
       </div>
     );
@@ -79,7 +79,7 @@ export default function ConfiguracoesPage() {
   if (!settings) return null;
 
   return (
-    <div className="mx-auto max-w-lg">
+    <div className="mx-auto max-w-2xl">
       <h1 className="mb-6 font-display text-xl text-foreground">Configurações da loja</h1>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-5">

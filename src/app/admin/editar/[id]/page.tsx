@@ -34,7 +34,7 @@ export default async function EditarPage({ params }: Props) {
   const categories = await getCategories();
 
   return (
-    <div className="mx-auto max-w-lg">
+    <div className="mx-auto max-w-2xl">
       <Link
         href="/admin"
         className="mb-4 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"

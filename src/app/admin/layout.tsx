@@ -14,22 +14,22 @@ export default function AdminLayout({
         className="sticky top-0 z-40"
         style={{ background: "#2A1A16" }}
       >
-        <div className="relative flex items-center justify-center h-14 px-5">
+        <div className="relative flex items-center justify-center px-5" style={{ minHeight: 80, padding: "20px 20px" }}>
           {/* Wordmark centralizado */}
           <Link href="/admin" className="flex flex-col items-center">
-            <span className="font-display text-[9px] uppercase tracking-[2px] text-[#b08880] leading-none">
+            <span className="font-display text-[13px] uppercase tracking-[2px] text-[#b08880] leading-none">
               Brechó
             </span>
-            <span className="font-script text-[22px] text-rosa leading-none" style={{ lineHeight: 0.9 }}>
+            <span className="font-script text-[32px] text-rosa" style={{ lineHeight: 1 }}>
               Bemvinda Poesia
             </span>
-            <span className="font-display italic text-[9px] text-[#b08880] leading-none" style={{ marginTop: "2px" }}>
+            <span className="font-display italic text-[13px] text-[#b08880] leading-none" style={{ marginTop: "2px" }}>
               & Cia.
             </span>
           </Link>
 
           {/* Botões de ação */}
-          <div className="absolute right-5 flex items-center gap-2">
+          <div className="absolute right-5 top-1/2 -translate-y-1/2 flex items-center gap-2">
             <Link
               href="/"
               target="_blank"
@@ -55,7 +55,7 @@ export default function AdminLayout({
         </div>
       </header>
 
-      <main className="flex-1 px-4 py-6">{children}</main>
+      <main className="flex-1 px-6 py-8">{children}</main>
     </div>
   );
 }

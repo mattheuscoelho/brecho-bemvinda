@@ -1,29 +1,35 @@
 "use client";
 
-import { MessageCircle } from "lucide-react";
 import { formatWhatsAppLink } from "@/lib/utils";
 import { STORE } from "@/lib/constants";
-import { Button } from "./ui/button";
 
 interface WhatsAppButtonProps {
   productName: string;
+  price?: number;
   phone?: string;
   className?: string;
 }
 
-export function WhatsAppButton({ productName, phone, className }: WhatsAppButtonProps) {
+export function WhatsAppButton({ productName, price, phone, className }: WhatsAppButtonProps) {
   const whatsapp = phone || STORE.whatsapp;
-  const message = `Olá! Tenho interesse na peça "${productName}" que vi no catálogo da ${STORE.name}. Ainda está disponível?`;
+  const priceFormatted = price
+    ? new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(price / 100)
+    : null;
+  const message = `Olá! Vi o catálogo do ${STORE.name} e tenho interesse na peça *${productName}*${priceFormatted ? ` (${priceFormatted})` : ""}. Ainda está disponível?`;
 
   return (
-    <Button
-      variant="primary"
-      size="lg"
-      className={className}
-      onClick={() => window.open(formatWhatsAppLink(whatsapp, message), "_blank")}
+    <a
+      href={formatWhatsAppLink(whatsapp, message)}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={`flex items-center justify-center gap-2 font-body text-[14px] font-bold text-white rounded-[26px] px-7 py-[13px] no-underline transition-all duration-300 hover:-translate-y-0.5 hover:scale-[1.02] active:scale-[0.97] ${className ?? ""}`}
+      style={{
+        background: "#E87A8C",
+        boxShadow: "0 4px 16px rgba(232,122,140,0.3)",
+        transitionTimingFunction: "cubic-bezier(0.34, 1.56, 0.64, 1)",
+      }}
     >
-      <MessageCircle className="h-5 w-5" />
-      Tenho interesse
-    </Button>
+      💬 Tenho interesse
+    </a>
   );
 }

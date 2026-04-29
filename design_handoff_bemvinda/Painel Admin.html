@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Admin — Brechó Bemvinda Poesia e Cia.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --rosa-claro: #F2B8B0;
+  --salmao:     #E8967A;
+  --verde-agua: #7DC4B8;
+  --verde-folha:#A8C89A;
+  --bege:       #FAF0E8;
+  --rosa-medio: #E87A8C;
+  --escuro:     #2a1a16;
+  --script: 'Great Vibes', cursive;
+  --serif:  'Playfair Display', serif;
+  --sans:   'Nunito', sans-serif;
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}
+html, body { height: 100%; font-family: var(--sans); background: #f5ede8; color: var(--escuro); overflow-x: hidden; }
+
+/* ══════════════════════
+   LOGIN SCREEN
+══════════════════════ */
+#loginScreen {
+  min-height: 100vh; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  background: var(--bege); padding: 32px 24px;
+  position: relative; overflow: hidden;
+}
+.login-blob { position: absolute; border-radius: 60% 40% 70% 30% / 50% 60% 40% 50%; pointer-events: none; }
+
+@keyframes float { 0%,100%{transform:translateY(0) rotate(0deg)} 50%{transform:translateY(-8px) rotate(2deg)} }
+@keyframes fade-up { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+@keyframes shake { 0%,100%{transform:translateX(0)} 20%,60%{transform:translateX(-6px)} 40%,80%{transform:translateX(6px)} }
+@keyframes pop-in { from{opacity:0;transform:scale(0.85)} to{opacity:1;transform:scale(1)} }
+@keyframes slide-up { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+@keyframes pulse-dot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.7)} }
+
+.login-flower { position: absolute; animation: float 7s ease-in-out infinite; }
+
+.login-card {
+  background: #fff; border-radius: 24px; padding: 36px 32px 40px;
+  width: 100%; max-width: 360px; position: relative; z-index: 2;
+  box-shadow: 0 8px 40px rgba(180,100,80,0.12);
+  animation: fade-up 0.6s var(--ease-out) both;
+}
+.login-wordmark { text-align: center; margin-bottom: 28px; }
+.login-top { font-family: var(--serif); font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase; color: #b08880; }
+.login-script { font-family: var(--script); font-size: 38px; color: var(--rosa-medio); line-height: 0.9; }
+.login-bottom { font-family: var(--serif); font-style: italic; font-size: 12px; color: #b08880; margin-top: 2px; }
+.login-badge { display: inline-block; background: var(--rosa-claro); color: #8a2a3a; font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 10px; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 20px; }
+
+.field-label { display: block; font-size: 11px; font-weight: 700; color: #8a6a60; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
+.field-input {
+  width: 100%; padding: 13px 16px; border-radius: 12px;
+  border: 1.5px solid #e8d8d0; background: var(--bege);
+  font-family: var(--sans); font-size: 15px; color: var(--escuro);
+  outline: none; transition: border-color 0.2s, box-shadow 0.2s;
+  margin-bottom: 14px;
+}
+.field-input:focus { border-color: var(--rosa-medio); box-shadow: 0 0 0 3px rgba(232,122,140,0.15); }
+.field-input::placeholder { color: #c4a898; }
+
+.btn-login {
+  width: 100%; padding: 14px; margin-top: 6px;
+  background: var(--rosa-medio); color: #fff;
+  border: none; border-radius: 14px; font-family: var(--sans);
+  font-size: 15px; font-weight: 700; cursor: pointer;
+  box-shadow: 0 4px 16px rgba(232,122,140,0.3);
+  transition: transform 0.2s var(--ease-spring), box-shadow 0.2s;
+}
+.btn-login:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(232,122,140,0.4); }
+.btn-login:active { transform: scale(0.97); }
+
+.login-error { color: var(--rosa-medio); font-size: 12px; text-align: center; margin-top: 10px; min-height: 18px; font-weight: 600; }
+.login-card.shake { animation: shake 0.4s ease; }
+
+/* ══════════════════════
+   ADMIN APP
+══════════════════════ */
+#adminApp { display: none; min-height: 100vh; }
+
+/* Top bar */
+.top-bar {
+  background: var(--escuro); padding: 14px 20px;
+  display: flex; justify-content: center; align-items: center;
+  position: sticky; top: 0; z-index: 50;
+  /* allow absolute children */
+  isolation: isolate;
+}
+.top-bar-brand { display: flex; flex-direction: column; }
+.top-bar-sup { font-family: var(--serif); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: #b08880; }
+.top-bar-script { font-family: var(--script); font-size: 22px; color: var(--rosa-claro); line-height: 0.9; }
+.top-bar-sub { font-family: var(--serif); font-style: italic; font-size: 10px; color: #b08880; }
+.top-bar-right { display: flex; align-items: center; gap: 12px; }
+.btn-logout { background: rgba(255,255,255,0.08); color: #d4a898; border: 1px solid rgba(255,255,255,0.12); padding: 6px 14px; border-radius: 10px; font-size: 12px; cursor: pointer; font-family: var(--sans); transition: background 0.2s; }
+.btn-logout:hover { background: rgba(255,255,255,0.15); }
+
+/* Summary cards */
+.summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 16px 16px 0; }
+.sum-card {
+  background: #fff; border-radius: 14px; padding: 14px 16px;
+  box-shadow: 0 2px 8px rgba(180,100,80,0.08);
+  animation: slide-up 0.4s var(--ease-out) both;
+}
+.sum-card:nth-child(2) { animation-delay: 0.06s; }
+.sum-card:nth-child(3) { animation-delay: 0.12s; }
+.sum-num { font-family: var(--serif); font-size: 28px; color: var(--rosa-medio); font-weight: 600; line-height: 1; }
+.sum-label { font-size: 11px; color: #b08880; margin-top: 4px; font-weight: 600; }
+
+/* Section header */
+.section-header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 20px 16px 10px;
+}
+.section-title { font-family: var(--serif); font-size: 18px; color: var(--escuro); }
+.btn-add {
+  background: var(--rosa-medio); color: #fff;
+  border: none; border-radius: 20px; padding: 8px 18px;
+  font-size: 13px; font-weight: 700; cursor: pointer; font-family: var(--sans);
+  display: flex; align-items: center; gap: 6px;
+  box-shadow: 0 3px 12px rgba(232,122,140,0.3);
+  transition: transform 0.2s var(--ease-spring), box-shadow 0.2s;
+}
+.btn-add:hover { transform: scale(1.05); box-shadow: 0 6px 18px rgba(232,122,140,0.4); }
+
+/* Filter tabs */
+.filter-tabs {
+  display: flex; gap: 6px; padding: 0 16px 12px;
+  overflow-x: auto; scrollbar-width: none;
+}
+.filter-tabs::-webkit-scrollbar { display: none; }
+.ftab {
+  flex-shrink: 0; padding: 5px 14px; border-radius: 16px; border: none;
+  background: #fff; color: #8a6a60; font-size: 11px; font-weight: 700;
+  cursor: pointer; box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  transition: all 0.2s;
+}
+.ftab.active { background: var(--rosa-medio); color: #fff; }
+
+/* Product list */
+.product-list { padding: 0 16px 120px; display: flex; flex-direction: column; gap: 10px; }
+
+.admin-card {
+  background: #fff; border-radius: 16px; overflow: hidden;
+  display: flex; align-items: stretch;
+  box-shadow: 0 2px 10px rgba(180,100,80,0.07);
+  animation: slide-up 0.35s var(--ease-out) both;
+  transition: box-shadow 0.2s;
+}
+.admin-card:hover { box-shadow: 0 4px 18px rgba(180,100,80,0.13); }
+
+.admin-card-img {
+  width: 72px; flex-shrink: 0;
+  background: repeating-linear-gradient(135deg, #f5e8e0 0, #f5e8e0 5px, #ede0d8 5px, #ede0d8 10px);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Courier New', monospace; font-size: 9px; color: #b89a90; text-align: center;
+  padding: 4px;
+}
+.admin-card-img.teal { background: repeating-linear-gradient(135deg, #e0f0ee 0, #e0f0ee 5px, #d0e8e4 5px, #d0e8e4 10px); color: #6a9e96; }
+.admin-card-img.green { background: repeating-linear-gradient(135deg, #e8f0e4 0, #e8f0e4 5px, #dce8d6 5px, #dce8d6 10px); color: #7a9e6e; }
+
+.admin-card-body { flex: 1; padding: 12px 14px; min-width: 0; }
+.admin-card-cat { font-size: 9px; color: var(--verde-agua); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+.admin-card-name { font-family: var(--serif); font-size: 14px; color: var(--escuro); line-height: 1.3; margin: 2px 0 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.admin-card-price { font-family: var(--script); font-size: 18px; color: var(--rosa-medio); }
+.sold-chip { display: inline-block; background: #f0e4dc; color: #8a6a60; font-size: 9px; font-weight: 700; padding: 2px 8px; border-radius: 8px; text-transform: uppercase; letter-spacing: 0.5px; margin-left: 6px; vertical-align: middle; }
+
+.admin-card-actions { display: flex; flex-direction: column; gap: 0; border-left: 1px solid #f5ede8; flex-shrink: 0; }
+.action-btn {
+  flex: 1; border: none; background: none; cursor: pointer;
+  padding: 0 14px; font-size: 18px;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s;
+  min-width: 48px;
+}
+.action-btn:first-child { border-bottom: 1px solid #f5ede8; }
+.action-btn:hover { background: var(--bege); }
+.action-btn.sold-btn:hover { background: #f0faf8; }
+.action-btn.del-btn:hover { background: #fff0f2; }
+
+/* FAB */
+.fab-add {
+  position: fixed; bottom: 28px; right: 24px; z-index: 100;
+  width: 58px; height: 58px; border-radius: 50%;
+  background: var(--rosa-medio); color: #fff; border: none;
+  font-size: 28px; font-weight: 300; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 6px 20px rgba(232,122,140,0.45);
+  transition: transform 0.3s var(--ease-spring), box-shadow 0.2s;
+}
+.fab-add:hover { transform: scale(1.12) rotate(90deg); box-shadow: 0 10px 28px rgba(232,122,140,0.55); }
+
+/* ══════════════════════
+   DRAWER / MODAL
+══════════════════════ */
+.drawer-overlay {
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(42,26,22,0.5); backdrop-filter: blur(4px);
+  opacity: 0; pointer-events: none; transition: opacity 0.3s;
+}
+.drawer-overlay.open { opacity: 1; pointer-events: all; }
+
+.drawer {
+  position: fixed; bottom: 0; left: 50%; transform: translateX(-50%) translateY(100%);
+  z-index: 201;
+  background: var(--bege); border-radius: 24px 24px 0 0;
+  max-height: 92vh; overflow-y: auto;
+  padding: 0 0 40px;
+  width: 100%; max-width: 480px;
+  transition: transform 0.4s var(--ease-spring);
+}
+.drawer-overlay.open .drawer { transform: translateX(-50%) translateY(0); }
+
+.drawer-handle { width: 36px; height: 4px; background: #ddd0c8; border-radius: 2px; margin: 14px auto 0; }
+.drawer-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px 8px; }
+.drawer-title { font-family: var(--script); font-size: 30px; color: var(--rosa-medio); }
+.drawer-close { background: none; border: none; font-size: 18px; color: #b08880; cursor: pointer; padding: 4px 8px; border-radius: 8px; transition: background 0.2s; }
+.drawer-close:hover { background: var(--rosa-claro); }
+
+.drawer-form { padding: 8px 20px 0; display: flex; flex-direction: column; gap: 14px; }
+
+.photo-zone {
+  border: 2px dashed #e0c8c0; border-radius: 16px;
+  background: #fff; padding: 28px 16px; text-align: center;
+  cursor: pointer; transition: border-color 0.2s, background 0.2s; position: relative; overflow: hidden;
+}
+.photo-zone:hover { border-color: var(--rosa-medio); background: #fff5f3; }
+.photo-zone-inner { display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 13px; color: #b08880; }
+.photo-zone-icon { font-size: 30px; }
+.photo-preview-img { width: 100%; border-radius: 10px; max-height: 220px; object-fit: cover; display: block; }
+
+.fl { font-size: 11px; font-weight: 700; color: #8a6a60; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: -8px; }
+.req { color: var(--rosa-medio); }
+
+.fi {
+  width: 100%; padding: 13px 16px; border-radius: 12px;
+  border: 1.5px solid #e8d8d0; background: #fff;
+  font-family: var(--sans); font-size: 15px; color: var(--escuro);
+  outline: none; transition: border-color 0.2s, box-shadow 0.2s;
+}
+.fi:focus { border-color: var(--rosa-medio); box-shadow: 0 0 0 3px rgba(232,122,140,0.15); }
+.fi::placeholder { color: #c4a898; }
+
+.cat-new-hint { font-size: 11px; color: var(--verde-agua); font-weight: 700; min-height: 16px; }
+
+.price-row { display: flex; align-items: center; gap: 0; }
+.price-prefix {
+  background: #f0e4dc; padding: 13px 14px; border-radius: 12px 0 0 12px;
+  font-family: var(--serif); font-size: 15px; color: #8a6a60;
+  border: 1.5px solid #e8d8d0; border-right: none; white-space: nowrap;
+}
+.price-row .fi { border-radius: 0 12px 12px 0; }
+
+.btn-submit-drawer {
+  padding: 15px; background: var(--rosa-medio); color: #fff;
+  border: none; border-radius: 14px; font-family: var(--sans);
+  font-size: 15px; font-weight: 700; cursor: pointer;
+  box-shadow: 0 4px 16px rgba(232,122,140,0.3);
+  transition: transform 0.2s var(--ease-spring), box-shadow 0.2s;
+  margin-top: 4px;
+}
+.btn-submit-drawer:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(232,122,140,0.4); }
+.btn-submit-drawer:active { transform: scale(0.97); }
+
+/* ── Confirm delete sheet ── */
+.confirm-sheet {
+  position: fixed; bottom: 0; left: 50%; transform: translateX(-50%) translateY(100%);
+  z-index: 300;
+  background: #fff; border-radius: 24px 24px 0 0; padding: 24px 24px 40px;
+  width: 100%; max-width: 480px;
+  transition: transform 0.35s var(--ease-spring);
+  box-shadow: 0 -4px 24px rgba(0,0,0,0.12);
+}
+.confirm-sheet.open { transform: translateX(-50%) translateY(0); }
+.confirm-title { font-family: var(--serif); font-size: 18px; margin-bottom: 6px; }
+.confirm-sub { font-size: 13px; color: #8a6a60; margin-bottom: 20px; line-height: 1.5; }
+.confirm-actions { display: flex; flex-direction: column; gap: 10px; }
+.btn-confirm-del { padding: 14px; background: #e05060; color: #fff; border: none; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: var(--sans); transition: background 0.2s; }
+.btn-confirm-del:hover { background: #c04050; }
+.btn-cancel { padding: 14px; background: var(--bege); color: #8a6a60; border: none; border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer; font-family: var(--sans); transition: background 0.2s; }
+.btn-cancel:hover { background: #f0e4dc; }
+
+/* ── Toast ── */
+.toast {
+  position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(20px);
+  background: var(--escuro); color: #fff; padding: 10px 20px; border-radius: 20px;
+  font-size: 13px; font-weight: 600; z-index: 400; opacity: 0;
+  transition: opacity 0.3s, transform 0.3s var(--ease-out);
+  white-space: nowrap; pointer-events: none;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+.btn-add-icon {
+  background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 10px; width: 36px; height: 36px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.2s, transform 0.2s var(--ease-spring);
+}
+.btn-add-icon:hover { background: var(--rosa-medio); transform: scale(1.1); }
+.btn-add-icon:hover svg circle { stroke: #fff; }
+.btn-add-icon:hover svg path { stroke: #fff; }
+
+/* Tab nav */
+.tab-nav {
+  display: flex; border-bottom: 2px solid #f0e4dc;
+  background: #fff; position: sticky; top: 64px; z-index: 40;
+}
+.tab-btn {
+  flex: 1; padding: 13px; border: none; background: none;
+  font-family: var(--sans); font-size: 13px; font-weight: 700;
+  color: #b08880; cursor: pointer;
+  border-bottom: 2px solid transparent; margin-bottom: -2px;
+  transition: color 0.2s, border-color 0.2s;
+}
+.tab-btn.active { color: var(--rosa-medio); border-bottom-color: var(--rosa-medio); }
+.tab-btn:hover:not(.active) { color: var(--escuro); }
+
+/* Empty state */
+.empty-state { text-align: center; padding: 48px 24px; color: #c4a898; }
+.empty-icon { font-size: 36px; margin-bottom: 12px; }
+.empty-text { font-family: var(--serif); font-style: italic; font-size: 16px; }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════
+     LOGIN SCREEN
+══════════════════ -->
+<div id="loginScreen">
+  <!-- Blobs -->
+  <div class="login-blob" style="width:280px;height:220px;top:-80px;left:-80px;background:var(--rosa-claro);opacity:0.4;"></div>
+  <div class="login-blob" style="width:200px;height:160px;bottom:-50px;right:-50px;background:var(--verde-agua);opacity:0.3;border-radius:40% 60% 30% 70%/60% 40% 70% 30%;"></div>
+
+  <!-- Flowers -->
+  <svg class="login-flower" width="70" height="70" viewBox="0 0 70 70" style="top:20px;right:30px;opacity:0.7;animation-delay:-2s;">
+    <ellipse cx="35" cy="18" rx="12" ry="16" fill="#F2B8B0" transform="rotate(0,35,35)"/>
+    <ellipse cx="35" cy="18" rx="12" ry="16" fill="#F2B8B0" transform="rotate(60,35,35)"/>
+    <ellipse cx="35" cy="18" rx="12" ry="16" fill="#F2B8B0" transform="rotate(120,35,35)"/>
+    <ellipse cx="35" cy="18" rx="12" ry="16" fill="#F2B8B0" transform="rotate(180,35,35)"/>
+    <ellipse cx="35" cy="18" rx="12" ry="16" fill="#F2B8B0" transform="rotate(240,35,35)"/>
+    <ellipse cx="35" cy="18" rx="12" ry="16" fill="#F2B8B0" transform="rotate(300,35,35)"/>
+    <circle cx="35" cy="35" r="10" fill="#F9D56E"/>
+  </svg>
+  <svg class="login-flower" width="50" height="50" viewBox="0 0 50 50" style="bottom:80px;left:20px;opacity:0.6;animation-delay:-4s;">
+    <ellipse cx="25" cy="12" rx="8" ry="12" fill="#7DC4B8" transform="rotate(0,25,25)"/>
+    <ellipse cx="25" cy="12" rx="8" ry="12" fill="#7DC4B8" transform="rotate(60,25,25)"/>
+    <ellipse cx="25" cy="12" rx="8" ry="12" fill="#7DC4B8" transform="rotate(120,25,25)"/>
+    <ellipse cx="25" cy="12" rx="8" ry="12" fill="#7DC4B8" transform="rotate(180,25,25)"/>
+    <ellipse cx="25" cy="12" rx="8" ry="12" fill="#7DC4B8" transform="rotate(240,25,25)"/>
+    <ellipse cx="25" cy="12" rx="8" ry="12" fill="#7DC4B8" transform="rotate(300,25,25)"/>
+    <circle cx="25" cy="25" r="7" fill="#F9D56E"/>
+  </svg>
+
+  <div class="login-card" id="loginCard">
+    <div class="login-wordmark">
+      <div class="login-top">Brechó</div>
+      <div class="login-script">Bemvinda Poesia</div>
+      <div class="login-bottom">& Cia.</div>
+    </div>
+    <div style="text-align:center;margin-bottom:24px;"></div>
+
+    <label class="field-label">Usuário</label>
+    <input class="field-input" type="text" id="loginUser" placeholder="bemvinda" autocomplete="username">
+
+    <label class="field-label">Senha</label>
+    <input class="field-input" type="password" id="loginPass" placeholder="••••••••" autocomplete="current-password">
+
+    <button class="btn-login" id="btnLogin">Entrar</button>
+    <div class="login-error" id="loginError"></div>
+  </div>
+</div>
+
+<!-- ══════════════════
+     ADMIN APP
+══════════════════ -->
+<div id="adminApp">
+
+  <!-- Top bar -->
+  <div class="top-bar">
+    <div class="top-bar-brand" style="flex:1;align-items:center;text-align:center;">
+      <span class="top-bar-sup">Brechó</span>
+      <span class="top-bar-script">Bemvinda Poesia</span>
+      <span class="top-bar-sub">& Cia. — Admin</span>
+    </div>
+    <div class="top-bar-right" style="position:absolute;right:20px;gap:8px;">
+      <a href="Catálogo Interativo.html" target="_blank" class="btn-add-icon" title="Ver a loja" style="text-decoration:none;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#d4a898" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+        </svg>
+      </a>
+      <button class="btn-add-icon" id="btnGearConfig" title="Configurações">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#d4a898" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+      </button>
+      <button class="btn-logout" id="btnLogout">Sair</button>
+    </div>
+  </div>
+
+  <!-- Summary -->
+  <div class="summary">
+    <div class="sum-card">
+      <div class="sum-num" id="sumTotal">0</div>
+      <div class="sum-label">Total de peças</div>
+    </div>
+    <div class="sum-card">
+      <div class="sum-num" id="sumDisp" style="color:var(--verde-agua);">0</div>
+      <div class="sum-label">Disponíveis</div>
+    </div>
+    <div class="sum-card">
+      <div class="sum-num" id="sumVend" style="color:var(--salmao);">0</div>
+      <div class="sum-label">Vendidas</div>
+    </div>
+  </div>
+
+  <!-- ── ACERVO VIEW ── -->
+  <div id="viewAcervo">
+
+  <!-- Section header -->
+  <div class="section-header">
+    <div class="section-title">Acervo</div>
+    <button class="btn-add" id="btnAddTop">＋ Nova peça</button>
+  </div>
+
+  <!-- Filter tabs -->
+  <div class="filter-tabs" id="filterTabs"></div>
+
+  <!-- Product list -->
+  <div class="product-list" id="productList"></div>
+
+  <!-- FAB -->
+  <button class="fab-add" id="fabAdd" aria-label="Adicionar peça">＋</button>
+
+  </div><!-- end viewAcervo -->
+
+  <!-- ── CONFIG TAB ── -->
+  <div id="viewConfig" style="display:none;padding:24px 20px 100px;">
+    <div style="font-family:var(--script);font-size:38px;color:var(--rosa-medio);text-align:center;margin-bottom:24px;">Configurações</div>
+
+    <form id="configForm" style="display:flex;flex-direction:column;gap:16px;max-width:440px;margin:0 auto;">
+
+      <span class="fl">Frase de destaque <span style="font-size:10px;font-weight:400;color:#b08880;text-transform:none;">(aparece no topo da vitrine, ex: "verão · 2027")</span></span>
+      <input class="fi" type="text" id="cfgHero" value="primavera · 2026">
+
+      <span class="fl">Texto da página Sobre</span>
+      <textarea class="fi" id="cfgSobre" rows="4" style="resize:vertical;line-height:1.6;font-family:var(--sans);">Um brechó com alma. Cada peça que passa por aqui carrega uma história, e a gente acredita que moda boa é moda que circula. Aqui você encontra roupas, acessórios e objetos únicos, escolhidos com carinho e com muito bom gosto.</textarea>
+
+      <span class="fl">Endereço</span>
+      <input class="fi" type="text" id="cfgEnd" value="Rua Ipiranga, 18 — Centro">
+
+      <span class="fl">Horário de funcionamento</span>
+      <input class="fi" type="text" id="cfgHor" value="Seg a Sáb, 10h às 17h">
+
+      <span class="fl">Formas de pagamento</span>
+      <input class="fi" type="text" id="cfgPag" value="Cartão, débito e Pix">
+
+      <span class="fl">WhatsApp <span style="font-size:10px;font-weight:400;color:#b08880;text-transform:none;">(com código do país)</span></span>
+      <input class="fi" type="tel" id="cfgWpp" value="5511915703530" inputmode="numeric">
+
+      <span class="fl">Instagram</span>
+      <input class="fi" type="text" id="cfgInsta" value="@bemvindapoesia">
+
+      <button type="submit" class="btn-submit-drawer" style="margin-top:4px;">Salvar configurações</button>
+      <div id="cfgToast" style="text-align:center;font-size:13px;color:var(--verde-agua);font-weight:700;min-height:18px;font-family:var(--serif);font-style:italic;"></div>
+    </form>
+  </div>
+</div>
+
+<!-- ══════════════════
+     DRAWER CADASTRO
+══════════════════ -->
+<div class="drawer-overlay" id="drawerOverlay">
+  <div class="drawer" id="drawer">
+    <div class="drawer-handle"></div>
+    <div class="drawer-header">
+      <span class="drawer-title" id="drawerTitle">Cadastrar Peça</span>
+      <button class="drawer-close" id="drawerClose">✕</button>
+    </div>
+    <form class="drawer-form" id="drawerForm">
+      <span class="fl">Foto da peça <span class="req">*</span></span>
+      <div class="photo-zone" id="photoZone">
+        <div class="photo-zone-inner" id="photoZoneInner">
+          <span class="photo-zone-icon">📷</span>
+          <span>Toque para adicionar foto</span>
+        </div>
+        <input type="file" accept="image/*" id="photoFile" style="display:none">
+      </div>
+
+      <span class="fl">Nome da peça <span class="req">*</span></span>
+      <input class="fi" type="text" id="dNome" placeholder="Ex: Vestido floral anos 70" required>
+
+      <span class="fl">Preço <span class="req">*</span></span>
+      <div class="price-row">
+        <span class="price-prefix">R$</span>
+        <input class="fi" type="text" id="dPreco" placeholder="89,00" inputmode="decimal" required>
+      </div>
+
+      <span class="fl">Categoria <span class="req">*</span></span>
+      <input class="fi" type="text" id="dCat" list="dCatList" placeholder="Ex: Vestidos, Blusas..." required autocomplete="off">
+      <datalist id="dCatList"></datalist>
+      <div class="cat-new-hint" id="catNewHint"></div>
+
+      <button class="btn-submit-drawer" type="submit" id="drawerSubmit">Adicionar ao catálogo</button>
+    </form>
+  </div>
+</div>
+
+<!-- Confirm delete sheet -->
+<div class="confirm-sheet" id="confirmSheet">
+  <div class="confirm-title">Excluir esta peça?</div>
+  <div class="confirm-sub" id="confirmSub"></div>
+  <div class="confirm-actions">
+    <button class="btn-confirm-del" id="btnConfirmDel">Sim, excluir</button>
+    <button class="btn-cancel" id="btnCancelDel">Cancelar</button>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+/* ── Dummy auth ── */
+const CREDS = { user: 'bemvinda', pass: '1234' };
+
+/* ── Data ── */
+let PRODUTOS = [
+  { id:1,  nome:'Vestido Floral Anos 70',  preco:'89',  cat:'Vestidos',  vendido:false, ph:'',      img:null },
+  { id:2,  nome:'Blazer Vintage Creme',    preco:'145', cat:'Casacos',   vendido:false, ph:'teal',  img:null },
+  { id:3,  nome:'Saia Midi Xadrez',        preco:'67',  cat:'Saias',     vendido:false, ph:'green', img:null },
+  { id:4,  nome:'Bolsa de Palha Bege',     preco:'120', cat:'Bolsas',    vendido:false, ph:'',      img:null },
+  { id:5,  nome:'Camisa Bordada Branca',   preco:'55',  cat:'Blusas',    vendido:false, ph:'teal',  img:null },
+  { id:6,  nome:'Calça Palazzo Verde',     preco:'98',  cat:'Calças',    vendido:false, ph:'green', img:null },
+  { id:7,  nome:'Conjunto Alfaiataria',    preco:'185', cat:'Conjuntos', vendido:true,  ph:'',      img:null },
+  { id:8,  nome:'Vestido Slip Salmão',     preco:'110', cat:'Vestidos',  vendido:false, ph:'teal',  img:null },
+  { id:9,  nome:'Blusa de Renda Creme',    preco:'72',  cat:'Blusas',    vendido:false, ph:'green', img:null },
+  { id:10, nome:'Saia Evasê Rosa',         preco:'58',  cat:'Saias',     vendido:false, ph:'',      img:null },
+  { id:11, nome:'Sobretudo Caramelo',      preco:'220', cat:'Casacos',   vendido:false, ph:'teal',  img:null },
+  { id:12, nome:'Bolsa Estruturada Nude',  preco:'138', cat:'Bolsas',    vendido:false, ph:'green', img:null },
+];
+let nextId = 13;
+let currentCat = 'Todos';
+let pendingImg = null;
+let deleteTarget = null;
+let editTarget = null;
+
+/* ── Helpers ── */
+const $ = id => document.getElementById(id);
+const phs = ['', 'teal', 'green'];
+
+function allCats() {
+  return [...new Set(PRODUTOS.map(p => p.cat))].sort();
+}
+
+function showToast(msg) {
+  const t = $('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+function updateSummary() {
+  const total = PRODUTOS.length;
+  const vend  = PRODUTOS.filter(p => p.vendido).length;
+  $('sumTotal').textContent = total;
+  $('sumDisp').textContent  = total - vend;
+  $('sumVend').textContent  = vend;
+}
+
+/* ── Login ── */
+$('btnLogin').addEventListener('click', doLogin);
+$('loginPass').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+
+function doLogin() {
+  const u = $('loginUser').value.trim();
+  const p = $('loginPass').value;
+  if (u === CREDS.user && p === CREDS.pass) {
+    $('loginScreen').style.display = 'none';
+    $('adminApp').style.display = 'block';
+    renderAll();
+  } else {
+    $('loginError').textContent = 'Usuário ou senha incorretos';
+    const card = $('loginCard');
+    card.style.animation = 'none';
+    card.offsetHeight;
+    card.style.animation = 'shake 0.4s ease';
+    setTimeout(() => $('loginError').textContent = '', 3000);
+  }
+}
+
+$('btnLogout').addEventListener('click', () => {
+  $('adminApp').style.display = 'none';
+  $('loginScreen').style.display = 'flex';
+  $('loginUser').value = '';
+  $('loginPass').value = '';
+});
+
+/* ── Render ── */
+function renderAll() {
+  updateSummary();
+  renderTabs();
+  renderList();
+  updateDrawerCatList();
+}
+
+function renderTabs() {
+  const tabs = $('filterTabs');
+  tabs.innerHTML = '';
+  ['Todos', ...allCats()].forEach(c => {
+    const btn = document.createElement('button');
+    btn.className = 'ftab' + (c === currentCat ? ' active' : '');
+    btn.textContent = c;
+    btn.addEventListener('click', () => {
+      currentCat = c;
+      renderTabs();
+      renderList();
+    });
+    tabs.appendChild(btn);
+  });
+}
+
+function renderList() {
+  const list = $('productList');
+  list.innerHTML = '';
+  const items = currentCat === 'Todos' ? PRODUTOS : PRODUTOS.filter(p => p.cat === currentCat);
+
+  if (items.length === 0) {
+    list.innerHTML = `<div class="empty-state"><div class="empty-icon">🌸</div><div class="empty-text">Nenhuma peça nessa categoria ainda</div></div>`;
+    return;
+  }
+
+  items.forEach((p, i) => {
+    const card = document.createElement('div');
+    card.className = 'admin-card';
+    card.style.animationDelay = `${i * 0.04}s`;
+
+    const imgEl = p.img
+      ? `<img src="${p.img}" style="width:72px;height:100%;object-fit:cover;flex-shrink:0;">`
+      : `<div class="admin-card-img ${p.ph}">foto</div>`;
+
+    card.innerHTML = `
+      ${imgEl}
+      <div class="admin-card-body">
+        <div class="admin-card-cat">${p.cat}</div>
+        <div class="admin-card-name">${p.nome}${p.vendido ? '<span class="sold-chip">Vendida</span>' : ''}</div>
+        <div class="admin-card-price">R$ ${p.preco}</div>
+      </div>
+      <div class="admin-card-actions">
+        <button class="action-btn sold-btn" title="${p.vendido ? 'Marcar disponível' : 'Marcar como vendida'}" data-id="${p.id}">
+          ${p.vendido ? '↩️' : '✅'}
+        </button>
+        <button class="action-btn del-btn" title="Excluir" data-id="${p.id}">🗑️</button>
+      </div>
+    `;
+    list.appendChild(card);
+  });
+
+  // Wire actions
+  list.querySelectorAll('.sold-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = +btn.dataset.id;
+      const p = PRODUTOS.find(x => x.id === id);
+      if (!p) return;
+      p.vendido = !p.vendido;
+      showToast(p.vendido ? `"${p.nome}" marcada como vendida ✅` : `"${p.nome}" disponível novamente ↩️`);
+      renderAll();
+    });
+  });
+
+  list.querySelectorAll('.del-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = +btn.dataset.id;
+      deleteTarget = id;
+      const p = PRODUTOS.find(x => x.id === id);
+      $('confirmSub').textContent = `"${p.nome}" — R$ ${p.preco} será removida do catálogo.`;
+      $('confirmSheet').classList.add('open');
+    });
+  });
+}
+
+/* ── Delete confirm ── */
+$('btnConfirmDel').addEventListener('click', () => {
+  PRODUTOS = PRODUTOS.filter(p => p.id !== deleteTarget);
+  $('confirmSheet').classList.remove('open');
+  deleteTarget = null;
+  if (currentCat !== 'Todos' && !PRODUTOS.find(p => p.cat === currentCat)) currentCat = 'Todos';
+  showToast('Peça excluída 🗑️');
+  renderAll();
+});
+$('btnCancelDel').addEventListener('click', () => {
+  $('confirmSheet').classList.remove('open');
+  deleteTarget = null;
+});
+
+/* ── Drawer ── */
+function openDrawer() {
+  pendingImg = null;
+  $('drawerForm').reset();
+  $('photoZoneInner').innerHTML = `<span class="photo-zone-icon">📷</span><span>Toque para adicionar foto</span>`;
+  $('catNewHint').textContent = '';
+  $('drawerTitle').textContent = 'Cadastrar Peça';
+  $('drawerSubmit').textContent = 'Adicionar ao catálogo';
+  $('drawerOverlay').classList.add('open');
+  setTimeout(() => $('dNome').focus(), 400);
+}
+function closeDrawer() {
+  $('drawerOverlay').classList.remove('open');
+}
+
+$('fabAdd').addEventListener('click', openDrawer);
+$('fabAdd').addEventListener('click', openDrawer);
+$('btnAddTop').addEventListener('click', openDrawer);
+$('drawerClose').addEventListener('click', closeDrawer);
+$('drawerOverlay').addEventListener('click', e => { if (e.target === $('drawerOverlay')) closeDrawer(); });
+
+/* ── Photo zone ── */
+$('photoZone').addEventListener('click', () => $('photoFile').click());
+$('photoFile').addEventListener('change', e => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    pendingImg = ev.target.result;
+    $('photoZoneInner').innerHTML = `<img src="${pendingImg}" class="photo-preview-img">`;
+  };
+  reader.readAsDataURL(file);
+});
+
+/* ── Category hint ── */
+$('dCat').addEventListener('input', function() {
+  const val = this.value.trim();
+  if (val && !allCats().map(c => c.toLowerCase()).includes(val.toLowerCase())) {
+    $('catNewHint').textContent = `✦ Nova categoria "${val}" será criada`;
+  } else {
+    $('catNewHint').textContent = '';
+  }
+});
+
+function updateDrawerCatList() {
+  const dl = $('dCatList');
+  dl.innerHTML = '';
+  allCats().forEach(c => {
+    const opt = document.createElement('option');
+    opt.value = c;
+    dl.appendChild(opt);
+  });
+}
+
+/* ── Submit form ── */
+$('drawerForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const nome  = $('dNome').value.trim();
+  const preco = $('dPreco').value.trim().replace(',', '.');
+  const cat   = $('dCat').value.trim();
+  if (!nome || !preco || !cat) return;
+
+  PRODUTOS.unshift({
+    id: nextId++,
+    nome, preco, cat,
+    vendido: false,
+    ph: phs[nextId % 3],
+    img: pendingImg || null,
+  });
+  currentCat = cat;
+  closeDrawer();
+  showToast(`"${nome}" adicionada! 🌸`);
+  renderAll();
+});
+
+/* ── Gear / config toggle ── */
+let configOpen = false;
+$('btnGearConfig').addEventListener('click', () => {
+  configOpen = !configOpen;
+  $('viewConfig').style.display = configOpen ? '' : 'none';
+  $('viewAcervo').style.display = configOpen ? 'none' : '';
+  $('fabAdd').style.display = configOpen ? 'none' : '';
+  $('btnGearConfig').style.background = configOpen ? 'var(--rosa-medio)' : '';
+});
+
+/* ── Config form ── */
+$('configForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  // Persist to localStorage so vitrine picks it up
+  localStorage.setItem('cfg_hero', $('cfgHero').value.trim());
+  localStorage.setItem('cfg_sobre', $('cfgSobre').value.trim());
+  localStorage.setItem('cfg_end', $('cfgEnd').value.trim());
+  localStorage.setItem('cfg_hor', $('cfgHor').value.trim());
+  localStorage.setItem('cfg_pag', $('cfgPag').value.trim());
+  localStorage.setItem('cfg_wpp', $('cfgWpp').value.trim());
+  localStorage.setItem('cfg_insta', $('cfgInsta').value.trim());
+
+  const hint = $('cfgToast');
+  hint.textContent = '✦ Configurações salvas!';
+  setTimeout(() => {
+    hint.textContent = '';
+    configOpen = false;
+    $('viewConfig').style.display = 'none';
+    $('viewAcervo').style.display = '';
+    $('fabAdd').style.display = '';
+    $('btnGearConfig').style.background = '';
+  }, 1800);
+});
+
+/* ── Load saved config ── */
+const cfgMap = { cfgHero:'cfg_hero', cfgSobre:'cfg_sobre', cfgEnd:'cfg_end', cfgHor:'cfg_hor', cfgPag:'cfg_pag', cfgWpp:'cfg_wpp', cfgInsta:'cfg_insta' };
+Object.entries(cfgMap).forEach(([id, key]) => {
+  const saved = localStorage.getItem(key);
+  if (saved) $( id).value = saved;
+});
+
+/* ── Init hint ── */
+$('loginUser').focus();
+</script>
+</body>
+</html>

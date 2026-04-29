@@ -155,6 +155,7 @@ export default async function ProductPage({ params }: Props) {
             {!isSold && !isReserved && (
               <WhatsAppButton
                 productName={product.name}
+                price={product.price}
                 phone={settings?.whatsapp}
                 className="w-full"
               />

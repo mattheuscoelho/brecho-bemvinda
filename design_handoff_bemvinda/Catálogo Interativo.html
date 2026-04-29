@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brechó Bemvinda Poesia e Cia.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* ── Reset & tokens ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --rosa-claro: #F2B8B0;
+  --salmao:     #E8967A;
+  --verde-agua: #7DC4B8;
+  --verde-folha:#A8C89A;
+  --bege:       #FAF0E8;
+  --rosa-medio: #E87A8C;
+  --escuro:     #2a1a16;
+  --script: 'Great Vibes', cursive;
+  --serif:  'Playfair Display', serif;
+  --sans:   'Nunito', sans-serif;
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html { scroll-behavior: smooth; }
+body { background: var(--bege); font-family: var(--sans); color: var(--escuro); overflow-x: hidden; }
+
+/* ── Blob background shapes ── */
+.blob { position: absolute; border-radius: 60% 40% 70% 30% / 50% 60% 40% 50%; pointer-events: none; }
+
+/* ── Animations ── */
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  33%       { transform: translateY(-6px) rotate(1.5deg); }
+  66%       { transform: translateY(-3px) rotate(-1deg); }
+}
+@keyframes twinkle {
+  0%, 100% { opacity: 0.6; transform: scale(1) rotate(0deg); }
+  50%       { opacity: 1;   transform: scale(1.3) rotate(15deg); }
+}
+@keyframes pulse-ring {
+  0%   { transform: scale(1); opacity: 0.6; }
+  100% { transform: scale(1.7); opacity: 0; }
+}
+@keyframes bob {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-4px); }
+}
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Flowers ── */
+.flower { position: absolute; pointer-events: none; animation: float 6s ease-in-out infinite; }
+.flower:nth-child(2n) { animation-duration: 8s; animation-delay: -2s; }
+.flower:nth-child(3n) { animation-duration: 7s; animation-delay: -4s; }
+.sparkle { position: absolute; pointer-events: none; animation: twinkle 2.5s ease-in-out infinite; }
+.sparkle:nth-child(2n) { animation-delay: -1s; animation-duration: 3s; }
+.sparkle:nth-child(3n) { animation-delay: -0.5s; animation-duration: 2s; }
+
+/* ══════════════════════════════════
+   DESKTOP (B — Editorial Floral)
+══════════════════════════════════ */
+
+/* Nav */
+.nav {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 18px 56px; border-bottom: 1px solid #f0e4dc;
+  background: #fff8f4; position: sticky; top: 0; z-index: 100;
+  backdrop-filter: blur(8px);
+}
+.nav-wordmark { display: flex; flex-direction: column; align-items: center; cursor: default; }
+.nav-script { font-family: var(--script); font-size: 32px; color: var(--rosa-medio); line-height: 0.9; transition: color 0.3s; }
+.nav-sub { font-family: var(--serif); font-style: italic; font-size: 10px; letter-spacing: 3px; color: #8a6a60; text-transform: uppercase; margin-top: 3px; }
+.nav-link { font-family: var(--serif); font-size: 13px; color: #b08880; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; position: relative; transition: color 0.25s; padding-bottom: 2px; }
+.nav-link::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 1px; background: var(--rosa-medio); transition: width 0.3s var(--ease-out); }
+.nav-link:hover { color: var(--rosa-medio); }
+.nav-link:hover::after { width: 100%; }
+
+/* Hero */
+.hero {
+  position: relative; overflow: hidden;
+  background: var(--bege);
+  display: flex; align-items: center; justify-content: center;
+  min-height: 420px; padding: 60px 56px;
+}
+.hero-content { position: relative; z-index: 2; text-align: center; max-width: 560px; }
+.hero-eyebrow { font-family: var(--serif); font-style: italic; font-size: 13px; color: #b08880; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 14px; }
+.hero-title { font-family: var(--serif); font-size: 68px; color: var(--escuro); line-height: 0.95; font-weight: 400; letter-spacing: -1px; }
+.hero-script { font-family: var(--script); font-size: 56px; color: var(--rosa-medio); line-height: 1.1; margin: 4px 0 10px; }
+.hero-sub { font-family: var(--sans); font-size: 14px; color: #8a6a60; line-height: 1.7; margin-bottom: 26px; }
+.hero-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+/* Buttons */
+.btn-primary {
+  background: var(--rosa-medio); color: #fff;
+  padding: 11px 28px; border-radius: 26px; font-size: 13px; font-weight: 700;
+  border: none; cursor: pointer; font-family: var(--sans);
+  box-shadow: 0 4px 16px rgba(232,122,140,0.3);
+  transition: transform 0.25s var(--ease-spring), box-shadow 0.25s, background 0.2s;
+  letter-spacing: 0.3px;
+}
+.btn-primary:hover { transform: translateY(-2px) scale(1.03); box-shadow: 0 8px 24px rgba(232,122,140,0.45); background: #e06478; }
+.btn-primary:active { transform: scale(0.97); }
+
+.btn-ghost {
+  background: #fff; color: var(--rosa-medio);
+  padding: 11px 28px; border-radius: 26px; font-size: 13px; font-weight: 700;
+  border: 1.5px solid var(--rosa-medio); cursor: pointer; font-family: var(--sans);
+  transition: transform 0.25s var(--ease-spring), background 0.2s, color 0.2s;
+}
+.btn-ghost:hover { transform: translateY(-2px) scale(1.03); background: var(--rosa-medio); color: #fff; }
+
+/* Filter bar */
+.filter-bar {
+  background: var(--rosa-claro);
+  padding: 14px 56px;
+  display: flex; gap: 8px; flex-wrap: wrap; align-items: center; justify-content: center;
+}
+.filter-pill {
+  padding: 6px 18px; border-radius: 20px; border: 1.5px solid transparent;
+  background: transparent; color: #6a2a24;
+  font-family: var(--sans); font-size: 12px; font-weight: 700;
+  cursor: pointer; transition: all 0.2s var(--ease-out);
+  letter-spacing: 0.3px; position: relative; overflow: hidden;
+}
+.filter-pill::before {
+  content: ''; position: absolute; inset: 0; border-radius: 20px;
+  background: var(--rosa-medio); opacity: 0; transition: opacity 0.2s;
+}
+.filter-pill:hover { border-color: var(--rosa-medio); color: var(--rosa-medio); transform: scale(1.05); }
+.filter-pill.active { background: var(--rosa-medio); color: #fff; border-color: var(--rosa-medio); box-shadow: 0 3px 10px rgba(232,122,140,0.35); }
+
+/* Product grid */
+.grid-section { padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: #ddd0c8; }
+@media (max-width: 1100px) { .grid-section { grid-template-columns: repeat(3, 1fr); } }
+
+.product-card {
+  background: #fff; position: relative; cursor: pointer; overflow: hidden;
+  transition: transform 0.3s var(--ease-spring), box-shadow 0.3s;
+}
+.product-card:hover { transform: scale(1.015); box-shadow: 0 8px 32px rgba(140,60,50,0.14); z-index: 2; }
+.product-card:hover .card-action { opacity: 1; transform: translateY(0); }
+.product-card:hover .ph-img { transform: scale(1.04); }
+
+.ph-img {
+  width: 100%; aspect-ratio: 3/4;
+  background: repeating-linear-gradient(135deg, #f5e8e0 0, #f5e8e0 6px, #ede0d8 6px, #ede0d8 12px);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Courier New', monospace; font-size: 11px; color: #b89a90;
+  transition: transform 0.5s var(--ease-out);
+}
+.ph-img.teal { background: repeating-linear-gradient(135deg, #e0f0ee 0, #e0f0ee 6px, #d0e8e4 6px, #d0e8e4 12px); color: #6a9e96; }
+.ph-img.green { background: repeating-linear-gradient(135deg, #e8f0e4 0, #e8f0e4 6px, #dce8d6 6px, #dce8d6 12px); color: #7a9e6e; }
+
+.card-action {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  background: linear-gradient(to top, rgba(42,26,22,0.85) 0%, transparent 100%);
+  padding: 40px 16px 16px;
+  opacity: 0; transform: translateY(8px);
+  transition: opacity 0.3s, transform 0.3s var(--ease-out);
+  text-align: center;
+}
+.card-action button {
+  background: #fff; color: var(--rosa-medio); border: none;
+  padding: 7px 20px; border-radius: 16px; font-family: var(--sans);
+  font-size: 11px; font-weight: 700; cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+}
+.card-action button:hover { background: var(--rosa-medio); color: #fff; transform: scale(1.05); }
+
+.card-body { padding: 14px 16px 18px; }
+.card-cat { font-size: 10px; color: var(--verde-agua); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+.card-name { font-family: var(--serif); font-size: 15px; color: #3a2420; line-height: 1.3; margin-bottom: 8px; }
+.card-price { font-family: var(--script); font-size: 24px; color: var(--rosa-medio); }
+
+.sold-overlay {
+  position: absolute; inset: 0; z-index: 3;
+  background: rgba(250,240,232,0.82);
+  display: flex; align-items: center; justify-content: center;
+  backdrop-filter: blur(2px);
+  transition: opacity 0.3s;
+}
+.sold-label { font-family: var(--serif); font-style: italic; font-size: 18px; color: #8a6a60; }
+
+/* About section */
+.about {
+  padding: 56px 56px; display: flex; gap: 56px; align-items: center; justify-content: center;
+  background: var(--verde-agua); position: relative; overflow: hidden;
+  text-align: center;
+}
+.about-text { flex: 1; position: relative; z-index: 2; }
+.about-script { font-family: var(--script); font-size: 42px; color: #fff; margin-bottom: 14px; }
+.about-p { font-family: var(--sans); font-size: 14px; color: #1a4a44; line-height: 1.8; max-width: 520px; margin: 0 auto; }
+.about-stats { display: flex; gap: 32px; margin-top: 24px; justify-content: center; }
+.stat { text-align: center; }
+.stat-num { font-family: var(--serif); font-size: 32px; color: #fff; font-weight: 600; transition: transform 0.3s var(--ease-spring); }
+.stat:hover .stat-num { transform: scale(1.15); }
+.stat-label { font-size: 11px; color: #1a4a44; margin-top: 2px; }
+.stat-divider { width: 1px; background: rgba(255,255,255,0.3); align-self: stretch; }
+
+/* Footer */
+footer {
+  background: var(--escuro); padding: 32px 56px;
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center; gap: 16px;
+}
+.footer-brand .f-script { font-family: var(--script); font-size: 30px; color: var(--rosa-claro); }
+.footer-brand .f-info { font-size: 12px; color: #b08880; margin-top: 4px; line-height: 1.7; }
+.pay-badges { display: flex; gap: 8px; flex-wrap: wrap; }
+.pay-badge {
+  background: rgba(255,255,255,0.08); color: #d4a898;
+  font-size: 11px; padding: 5px 14px; border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.12);
+  transition: background 0.2s, transform 0.2s;
+  cursor: default;
+}
+.pay-badge:hover { background: rgba(255,255,255,0.14); transform: translateY(-2px); }
+
+/* WhatsApp FAB */
+.whatsapp-fab {
+  position: fixed; bottom: 28px; right: 28px; z-index: 200;
+  transition: opacity 0.3s, transform 0.3s var(--ease-spring), box-shadow 0.3s;
+  width: 56px; height: 56px; border-radius: 50%;
+  background: #25D366; border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px;
+  box-shadow: 0 4px 18px rgba(37,211,102,0.45);
+  transition: transform 0.3s var(--ease-spring), box-shadow 0.3s;
+  animation: bob 3s ease-in-out infinite;
+}
+.whatsapp-fab::before {
+  content: ''; position: absolute; inset: 0; border-radius: 50%;
+  background: #25D366; animation: pulse-ring 2s ease-out infinite;
+  z-index: -1;
+}
+.whatsapp-fab:hover { transform: scale(1.15); box-shadow: 0 8px 28px rgba(37,211,102,0.6); animation: none; }
+.whatsapp-fab:active { transform: scale(0.94); }
+
+/* ══════════════════════════════════
+   MOBILE (C — Mobile Minimalista)
+══════════════════════════════════ */
+@media (max-width: 767px) {
+
+  .nav { padding: 12px 20px; }
+  .nav-link { display: none; }
+  .nav-script { font-size: 26px; }
+
+  .hero { padding: 32px 20px; min-height: auto; }
+  .hero-title { font-size: 38px; }
+  .hero-script { font-size: 36px; }
+
+  .filter-bar { padding: 12px 16px; gap: 6px; justify-content: flex-start; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+  .filter-bar::-webkit-scrollbar { display: none; }
+  .filter-pill { flex-shrink: 0; padding: 6px 14px; }
+
+  .grid-section { grid-template-columns: 1fr 1fr; gap: 10px; background: transparent; padding: 0 14px 24px; }
+  .product-card { border-radius: 12px; box-shadow: 0 2px 10px rgba(180,100,80,0.08); overflow: hidden; }
+  .product-card:hover { transform: translateY(-4px); }
+  .card-action { display: none; }
+  .card-body { padding: 10px 12px 12px; }
+  .card-name { font-size: 12px; }
+  .card-price { font-size: 19px; }
+
+  .about { flex-direction: column; gap: 24px; padding: 32px 20px; }
+  .about-stats { gap: 20px; }
+  .about-script { font-size: 34px; }
+
+  footer { padding: 24px 20px; }
+  .pay-badges { justify-content: center; }
+
+  .whatsapp-fab { bottom: 20px; right: 20px; width: 52px; height: 52px; }
+  .admin-fab { bottom: 84px; right: 22px; }
+
+  /* Mobile hero card */
+  .hero-card {
+    margin: 0 14px 20px; border-radius: 16px;
+    background: linear-gradient(135deg, var(--rosa-claro), var(--salmao));
+    padding: 24px 20px; position: relative; overflow: hidden;
+  }
+  .hero-card-script { font-family: var(--script); font-size: 28px; color: #fff; line-height: 1.2; }
+  .hero-card-info { font-size: 11px; color: #6a2a24; margin-top: 8px; }
+  .hero-card-btn {
+    margin-top: 14px; display: inline-block;
+    background: #fff; color: var(--rosa-medio); padding: 8px 20px;
+    border-radius: 20px; font-size: 12px; font-weight: 700;
+    font-family: var(--sans); border: none; cursor: pointer;
+    transition: transform 0.2s var(--ease-spring), box-shadow 0.2s;
+  }
+  .hero-card-btn:hover { transform: scale(1.05); box-shadow: 0 4px 14px rgba(232,122,140,0.3); }
+
+  .hero-full { display: none; }
+}
+
+@media (min-width: 768px) {
+  .hero-card { display: none; }
+}
+
+/* ── Sold badge desktop ── */
+.sold-badge {
+  position: absolute; top: 12px; right: 12px; z-index: 4;
+  background: rgba(42,26,22,0.72); color: #fff;
+  padding: 3px 10px; border-radius: 10px; font-size: 10px; font-weight: 700;
+  letter-spacing: 0.8px; text-transform: uppercase; backdrop-filter: blur(4px);
+}
+
+/* ── Section reveal ── */
+.reveal { opacity: 1; }
+.reveal.animate-in { opacity: 0; transform: translateY(20px); transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out); }
+.reveal.animate-in.visible { opacity: 1; transform: none; }
+</style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav class="nav">
+  <span class="nav-link">Catálogo</span>
+  <div class="nav-wordmark">
+    <span class="nav-sub" style="margin-bottom:2px;">Brechó</span>
+    <span class="nav-script">Bemvinda Poesia</span>
+    <span class="nav-sub">& Cia.</span>
+  </div>
+  <span class="nav-link">Sobre nós</span>
+</nav>
+
+<!-- ── HERO desktop (B) ── -->
+<section class="hero hero-full" id="hero">
+  <!-- Blobs -->
+  <div class="blob" style="width:400px;height:320px;top:-120px;left:-100px;background:var(--rosa-claro);opacity:0.42;"></div>
+  <div class="blob" style="width:300px;height:240px;bottom:-80px;right:-60px;background:var(--verde-agua);opacity:0.28;border-radius:40% 60% 30% 70%/60% 40% 70% 30%;"></div>
+  <div class="blob" style="width:220px;height:180px;top:-30px;right:180px;background:var(--salmao);opacity:0.2;border-radius:60% 40% 50% 50%/40% 60% 50% 50%;"></div>
+  <!-- Flowers -->
+  <svg class="flower" width="90" height="90" viewBox="0 0 90 90" style="top:12px;left:50px;opacity:0.75;">
+    <ellipse cx="45" cy="25" rx="15" ry="22" fill="#F2B8B0" transform="rotate(0,45,45)"/>
+    <ellipse cx="45" cy="25" rx="15" ry="22" fill="#F2B8B0" transform="rotate(60,45,45)"/>
+    <ellipse cx="45" cy="25" rx="15" ry="22" fill="#F2B8B0" transform="rotate(120,45,45)"/>
+    <ellipse cx="45" cy="25" rx="15" ry="22" fill="#F2B8B0" transform="rotate(180,45,45)"/>
+    <ellipse cx="45" cy="25" rx="15" ry="22" fill="#F2B8B0" transform="rotate(240,45,45)"/>
+    <ellipse cx="45" cy="25" rx="15" ry="22" fill="#F2B8B0" transform="rotate(300,45,45)"/>
+    <circle cx="45" cy="45" r="12" fill="#F9D56E"/>
+  </svg>
+  <svg class="flower" width="70" height="70" viewBox="0 0 70 70" style="bottom:8px;left:180px;opacity:0.65;">
+    <ellipse cx="35" cy="18" rx="12" ry="17" fill="#7DC4B8" transform="rotate(0,35,35)"/>
+    <ellipse cx="35" cy="18" rx="12" ry="17" fill="#7DC4B8" transform="rotate(60,35,35)"/>
+    <ellipse cx="35" cy="18" rx="12" ry="17" fill="#7DC4B8" transform="rotate(120,35,35)"/>
+    <ellipse cx="35" cy="18" rx="12" ry="17" fill="#7DC4B8" transform="rotate(180,35,35)"/>
+    <ellipse cx="35" cy="18" rx="12" ry="17" fill="#7DC4B8" transform="rotate(240,35,35)"/>
+    <ellipse cx="35" cy="18" rx="12" ry="17" fill="#7DC4B8" transform="rotate(300,35,35)"/>
+    <circle cx="35" cy="35" r="9" fill="#F9D56E"/>
+  </svg>
+  <svg class="flower" width="56" height="56" viewBox="0 0 56 56" style="top:22px;right:110px;opacity:0.8;">
+    <ellipse cx="28" cy="14" rx="9" ry="13" fill="#E8967A" transform="rotate(0,28,28)"/>
+    <ellipse cx="28" cy="14" rx="9" ry="13" fill="#E8967A" transform="rotate(60,28,28)"/>
+    <ellipse cx="28" cy="14" rx="9" ry="13" fill="#E8967A" transform="rotate(120,28,28)"/>
+    <ellipse cx="28" cy="14" rx="9" ry="13" fill="#E8967A" transform="rotate(180,28,28)"/>
+    <ellipse cx="28" cy="14" rx="9" ry="13" fill="#E8967A" transform="rotate(240,28,28)"/>
+    <ellipse cx="28" cy="14" rx="9" ry="13" fill="#E8967A" transform="rotate(300,28,28)"/>
+    <circle cx="28" cy="28" r="7" fill="#F9D56E"/>
+  </svg>
+  <svg class="flower" width="44" height="44" viewBox="0 0 44 44" style="bottom:14px;right:190px;opacity:0.6;">
+    <ellipse cx="22" cy="11" rx="7" ry="10" fill="#A8C89A" transform="rotate(0,22,22)"/>
+    <ellipse cx="22" cy="11" rx="7" ry="10" fill="#A8C89A" transform="rotate(60,22,22)"/>
+    <ellipse cx="22" cy="11" rx="7" ry="10" fill="#A8C89A" transform="rotate(120,22,22)"/>
+    <ellipse cx="22" cy="11" rx="7" ry="10" fill="#A8C89A" transform="rotate(180,22,22)"/>
+    <ellipse cx="22" cy="11" rx="7" ry="10" fill="#A8C89A" transform="rotate(240,22,22)"/>
+    <ellipse cx="22" cy="11" rx="7" ry="10" fill="#A8C89A" transform="rotate(300,22,22)"/>
+    <circle cx="22" cy="22" r="6" fill="#F9D56E"/>
+  </svg>
+  <!-- Sparkles -->
+  <svg class="sparkle" width="14" height="14" viewBox="0 0 20 20" style="top:38px;left:290px;"><path d="M10 0 L11.5 8.5 L20 10 L11.5 11.5 L10 20 L8.5 11.5 L0 10 L8.5 8.5 Z" fill="var(--rosa-medio)" opacity="0.7"/></svg>
+  <svg class="sparkle" width="10" height="10" viewBox="0 0 20 20" style="top:70px;right:280px;"><path d="M10 0 L11.5 8.5 L20 10 L11.5 11.5 L10 20 L8.5 11.5 L0 10 L8.5 8.5 Z" fill="var(--verde-agua)" opacity="0.8"/></svg>
+  <svg class="sparkle" width="8" height="8" viewBox="0 0 20 20" style="bottom:36px;left:380px;"><path d="M10 0 L11.5 8.5 L20 10 L11.5 11.5 L10 20 L8.5 11.5 L0 10 L8.5 8.5 Z" fill="var(--salmao)" opacity="0.7"/></svg>
+  <svg class="sparkle" width="16" height="16" viewBox="0 0 20 20" style="top:16px;right:370px;"><path d="M10 0 L11.5 8.5 L20 10 L11.5 11.5 L10 20 L8.5 11.5 L0 10 L8.5 8.5 Z" fill="var(--rosa-claro)" opacity="0.9"/></svg>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow" id="heroEyebrow">primavera · 2026</div>
+    <div class="hero-title">Peças únicas</div>
+    <div class="hero-script">com história</div>
+    <p class="hero-sub">Moda vintage selecionada com carinho<br>no coração do Centro.</p>
+    <div class="hero-actions">
+      <button class="btn-primary" onclick="document.getElementById('catalogo').scrollIntoView()">Explorar o acervo</button>
+      <button class="btn-ghost">💬 WhatsApp</button>
+    </div>
+  </div>
+</section>
+
+<!-- ── HERO mobile card (C) ── -->
+<div class="hero-card" style="position:relative;overflow:hidden;margin-top:12px;">
+  <svg class="flower" width="60" height="60" viewBox="0 0 60 60" style="right:8px;top:-8px;opacity:0.45;">
+    <ellipse cx="30" cy="14" rx="10" ry="15" fill="#fff" transform="rotate(0,30,30)"/>
+    <ellipse cx="30" cy="14" rx="10" ry="15" fill="#fff" transform="rotate(60,30,30)"/>
+    <ellipse cx="30" cy="14" rx="10" ry="15" fill="#fff" transform="rotate(120,30,30)"/>
+    <ellipse cx="30" cy="14" rx="10" ry="15" fill="#fff" transform="rotate(180,30,30)"/>
+    <ellipse cx="30" cy="14" rx="10" ry="15" fill="#fff" transform="rotate(240,30,30)"/>
+    <ellipse cx="30" cy="14" rx="10" ry="15" fill="#fff" transform="rotate(300,30,30)"/>
+    <circle cx="30" cy="30" r="8" fill="#F9D56E"/>
+  </svg>
+  <svg class="sparkle" width="10" height="10" viewBox="0 0 20 20" style="top:10px;right:78px;"><path d="M10 0 L11.5 8.5 L20 10 L11.5 11.5 L10 20 L8.5 11.5 L0 10 L8.5 8.5 Z" fill="#fff" opacity="0.8"/></svg>
+  <div style="position:relative;z-index:2;">
+    <div class="hero-card-script">Peças únicas<br>esperando por você ✦</div>
+    <div class="hero-card-info">Rua Ipiranga, 18 · 10h–17h</div>
+    <button class="hero-card-btn">💬 Falar no WhatsApp</button>
+  </div>
+</div>
+
+<!-- ── FILTROS (gerado dinamicamente pelo JS) ── -->
+<div class="filter-bar reveal" id="catalogo" id="filter-bar"></div>
+
+<!-- ── GRID ── -->
+<div class="grid-section" id="grid"></div>
+
+<!-- ── SOBRE ── -->
+<section class="about reveal">
+  <div class="blob" style="width:260px;height:200px;top:-70px;right:-40px;background:#fff;opacity:0.15;"></div>
+  <svg class="flower" width="60" height="60" viewBox="0 0 60 60" style="top:10px;right:52px;opacity:0.45;">
+    <ellipse cx="30" cy="14" rx="10" ry="15" fill="#fff" transform="rotate(0,30,30)"/>
+    <ellipse cx="30" cy="14" rx="10" ry="15" fill="#fff" transform="rotate(60,30,30)"/>
+    <ellipse cx="30" cy="14" rx="10" ry="15" fill="#fff" transform="rotate(120,30,30)"/>
+    <ellipse cx="30" cy="14" rx="10" ry="15" fill="#fff" transform="rotate(180,30,30)"/>
+    <ellipse cx="30" cy="14" rx="10" ry="15" fill="#fff" transform="rotate(240,30,30)"/>
+    <ellipse cx="30" cy="14" rx="10" ry="15" fill="#fff" transform="rotate(300,30,30)"/>
+    <circle cx="30" cy="30" r="8" fill="#F9D56E"/>
+  </svg>
+  <div class="about-text">
+    <div class="about-script">Sobre a loja</div>
+    <p class="about-p">Inaugurado em março de 2026, o Brechó Bemvinda Poesia e Cia. nasceu do amor por peças únicas, com personalidade e história. Acreditamos que moda sustentável pode ser sofisticada e acessível — cada peça é escolhida com muito carinho.</p>
+    <div class="about-stats">
+      <div class="stat"><div class="stat-num">200+</div><div class="stat-label">peças no acervo</div></div>
+      <div class="stat-divider"></div>
+      <div class="stat"><div class="stat-num">2026</div><div class="stat-label">inauguração</div></div>
+      <div class="stat-divider"></div>
+      <div class="stat"><div class="stat-num">3×</div><div class="stat-label">no cartão</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer class="reveal">
+  <div class="footer-brand">
+    <div style="font-family:var(--serif);font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#b08880;margin-bottom:2px;">Brechó</div>
+    <div class="f-script">Bemvinda Poesia</div>
+    <div style="font-family:var(--serif);font-style:italic;font-size:12px;color:#b08880;margin-bottom:6px;">&amp; Cia.</div>
+    <div class="f-info">Rua Ipiranga, 18 — Centro<br>Seg–Sáb · 10h às 17h</div>
+  </div>
+  <div class="pay-badges">
+    <span class="pay-badge">Cartão de Crédito</span>
+    <span class="pay-badge">Débito</span>
+    <span class="pay-badge">Pix</span>
+  </div>
+</footer>
+
+<!-- ── WhatsApp FAB ── -->
+<button class="whatsapp-fab" aria-label="WhatsApp">💬</button>
+
+
+
+<script>
+/* ── Products data ── */
+let PRODUTOS = [
+  { id:1,  nome:'Vestido Floral Anos 70',  preco:'R$ 89',  cat:'Vestidos',  vendido:false, ph:'',      img:null },
+  { id:2,  nome:'Blazer Vintage Creme',    preco:'R$ 145', cat:'Casacos',   vendido:false, ph:'teal',  img:null },
+  { id:3,  nome:'Saia Midi Xadrez',        preco:'R$ 67',  cat:'Saias',     vendido:false, ph:'green', img:null },
+  { id:4,  nome:'Bolsa de Palha Bege',     preco:'R$ 120', cat:'Bolsas',    vendido:false, ph:'',      img:null },
+  { id:5,  nome:'Camisa Bordada Branca',   preco:'R$ 55',  cat:'Blusas',    vendido:false, ph:'teal',  img:null },
+  { id:6,  nome:'Calça Palazzo Verde',     preco:'R$ 98',  cat:'Calças',    vendido:false, ph:'green', img:null },
+  { id:7,  nome:'Conjunto Alfaiataria',    preco:'R$ 185', cat:'Conjuntos', vendido:true,  ph:'',      img:null },
+  { id:8,  nome:'Vestido Slip Salmão',     preco:'R$ 110', cat:'Vestidos',  vendido:false, ph:'teal',  img:null },
+  { id:9,  nome:'Blusa de Renda Creme',    preco:'R$ 72',  cat:'Blusas',    vendido:false, ph:'green', img:null },
+  { id:10, nome:'Saia Evasê Rosa',         preco:'R$ 58',  cat:'Saias',     vendido:false, ph:'',      img:null },
+  { id:11, nome:'Sobretudo Caramelo',      preco:'R$ 220', cat:'Casacos',   vendido:false, ph:'teal',  img:null },
+  { id:12, nome:'Bolsa Estruturada Nude',  preco:'R$ 138', cat:'Bolsas',    vendido:false, ph:'green', img:null },
+];
+
+let currentCat = 'Todos';
+let nextId = 13;
+
+/* ── Helpers ── */
+const phs = ['', 'teal', 'green'];
+
+function availableCats() {
+  const cats = [...new Set(PRODUTOS.filter(p => !p.vendido).map(p => p.cat))].sort();
+  return cats;
+}
+
+/* ── Build filter pills ── */
+function buildFilters() {
+  const bar = document.getElementById('catalogo');
+  const cats = availableCats();
+
+  // If current filter no longer exists, reset to Todos
+  if (currentCat !== 'Todos' && !cats.includes(currentCat)) currentCat = 'Todos';
+
+  bar.innerHTML = '';
+
+  ['Todos', ...cats].forEach(c => {
+    const btn = document.createElement('button');
+    btn.className = 'filter-pill' + (c === currentCat ? ' active' : '');
+    btn.dataset.cat = c;
+    btn.textContent = c;
+    btn.addEventListener('click', function() {
+      currentCat = c;
+      buildFilters();
+      buildGrid(c);
+      addRipple(this);
+    });
+    bar.appendChild(btn);
+  });
+
+  // Update datalist for the modal
+  const dl = document.getElementById('catList');
+  if (dl) {
+    dl.innerHTML = '';
+    cats.forEach(c => {
+      const opt = document.createElement('option');
+      opt.value = c;
+      dl.appendChild(opt);
+    });
+  }
+}
+
+function addRipple(el) {
+  const ripple = document.createElement('span');
+  ripple.style.cssText = `
+    position:absolute;border-radius:50%;
+    background:rgba(255,255,255,0.5);
+    width:60px;height:60px;left:50%;top:50%;
+    transform:translate(-50%,-50%) scale(0);
+    animation:ripple 0.4s ease-out forwards;
+    pointer-events:none;
+  `;
+  el.appendChild(ripple);
+  setTimeout(() => ripple.remove(), 400);
+}
+
+/* ── Build grid ── */
+function buildGrid(cat) {
+  const grid = document.getElementById('grid');
+  const items = cat === 'Todos' ? PRODUTOS : PRODUTOS.filter(p => p.cat === cat);
+
+  grid.style.opacity = '0';
+  grid.style.transform = 'translateY(8px)';
+  grid.style.transition = 'opacity 0.2s, transform 0.2s';
+
+  setTimeout(() => {
+    grid.innerHTML = '';
+    items.forEach(p => {
+      const card = document.createElement('div');
+      card.className = 'product-card';
+
+      const imgContent = p.img
+        ? `<img src="${p.img}" style="width:100%;aspect-ratio:3/4;object-fit:cover;display:block;transition:transform 0.5s var(--ease-out);" class="ph-img">`
+        : `<div class="ph-img ${p.ph}" style="filter:${p.vendido ? 'grayscale(0.4) opacity(0.75)' : 'none'}">foto do produto</div>`;
+
+      card.innerHTML = `
+        ${imgContent}
+        ${p.vendido
+          ? `<div class="sold-overlay"><span class="sold-label">vendido</span></div>
+             <div class="sold-badge">Vendido</div>`
+          : `<div class="card-action"><button onclick="event.stopPropagation()">Perguntar pelo WhatsApp</button></div>`
+        }
+        <div class="card-body">
+          <div class="card-cat">${p.cat}</div>
+          <div class="card-name">${p.nome}</div>
+          <div class="card-price">${p.preco}</div>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+
+    grid.style.opacity = '1';
+    grid.style.transform = 'none';
+  }, 180);
+}
+
+/* ── Load config from localStorage ── */
+const savedHero = localStorage.getItem('cfg_hero');
+if (savedHero) document.getElementById('heroEyebrow').textContent = savedHero;
+
+/* ── Ripple keyframe ── */
+const style = document.createElement('style');
+style.textContent = '@keyframes ripple { to { transform: translate(-50%,-50%) scale(3); opacity: 0; } }';
+document.head.appendChild(style);
+
+/* ── Scroll reveal ── */
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.12 });
+
+document.querySelectorAll('.reveal').forEach(el => {
+  el.classList.add('animate-in');
+  observer.observe(el);
+});
+
+/* ── Init ── */
+buildFilters();
+buildGrid('Todos');
+</script>
+</body>
+</html>

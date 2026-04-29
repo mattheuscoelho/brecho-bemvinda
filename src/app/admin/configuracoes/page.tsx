@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Loader2, Check } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { logAdminAction } from "@/lib/data/admin-logs";
@@ -10,6 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import type { StoreSettings } from "@/lib/supabase/types";
 
 export default function ConfiguracoesPage() {
+  const router = useRouter();
   const [settings, setSettings] = useState<StoreSettings | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -60,6 +62,7 @@ export default function ConfiguracoesPage() {
     } else {
       await logAdminAction({ action: "update_settings", entity_type: "settings" });
       setSaved(true);
+      setTimeout(() => router.push("/admin"), 1200);
     }
 
     setSaving(false);

@@ -14,6 +14,16 @@ import { logAdminAction } from "@/lib/data/admin-logs";
 import type { Category, ProductWithImages, ProductCondition } from "@/lib/supabase/types";
 import type { ProductStatus } from "@/lib/constants";
 
+function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .replace(/[^a-z0-9\s-]/g, "")
+    .trim()
+    .replace(/\s+/g, "-");
+}
+
 interface ProductFormProps {
   product?: ProductWithImages;
   categories: Category[];
@@ -45,10 +55,14 @@ export function ProductForm({ product, categories }: ProductFormProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const isEdit = !!product;
 
+  const existingCategory = product
+    ? categories.find((c) => c.id === product.category_id)
+    : null;
+
   const [name, setName] = useState(product?.name ?? "");
   const [description, setDescription] = useState(product?.description ?? "");
   const [price, setPrice] = useState(product ? (product.price / 100).toFixed(2) : "");
-  const [categoryId, setCategoryId] = useState(product?.category_id ?? "");
+  const [categoryInput, setCategoryInput] = useState(existingCategory?.name ?? "");
   const [status, setStatus] = useState<string>(product?.status ?? "available");
   const [size, setSize] = useState(product?.size ?? "");
   const [condition, setCondition] = useState(product?.condition ?? "");
@@ -112,12 +126,31 @@ export function ProductForm({ product, categories }: ProductFormProps) {
 
     if (!name.trim()) { setError("Nome é obrigatório."); return; }
     if (!price || Number(price) <= 0) { setError("Preço inválido."); return; }
-    if (!categoryId) { setError("Selecione uma categoria."); return; }
+    if (!categoryInput.trim()) { setError("Informe a categoria."); return; }
 
     setSaving(true);
     const supabase = createClient();
 
     try {
+      // Resolve ou cria categoria
+      const trimmedCat = categoryInput.trim();
+      const existing = categories.find(
+        (c) => c.name.toLowerCase() === trimmedCat.toLowerCase()
+      );
+      let categoryId: string;
+      if (existing) {
+        categoryId = existing.id;
+      } else {
+        const slug = slugify(trimmedCat);
+        const { data: newCat, error: catError } = await supabase
+          .from("categories")
+          .insert({ name: trimmedCat, slug })
+          .select("id")
+          .single();
+        if (catError || !newCat) throw new Error("Erro ao criar categoria.");
+        categoryId = newCat.id;
+      }
+
       // Upload new files
       const uploadedImages: ImageItem[] = [];
       for (const img of images) {
@@ -214,8 +247,6 @@ export function ProductForm({ product, categories }: ProductFormProps) {
     }
   }
 
-  const categoryOptions = categories.map((c) => ({ value: c.id, label: c.name }));
-
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-5">
       {/* Fotos */}
@@ -292,15 +323,34 @@ export function ProductForm({ product, categories }: ProductFormProps) {
         required
       />
 
-      <Select
-        id="category"
-        label="Categoria"
-        value={categoryId}
-        onChange={(e) => setCategoryId(e.target.value)}
-        options={categoryOptions}
-        placeholder="Selecione..."
-        required
-      />
+      {/* Campo de categoria livre com autocomplete */}
+      <div className="flex flex-col gap-1.5">
+        <label htmlFor="category" className="text-sm font-medium text-foreground">
+          Categoria
+        </label>
+        <input
+          id="category"
+          list="category-list"
+          value={categoryInput}
+          onChange={(e) => setCategoryInput(e.target.value)}
+          placeholder="Ex: Vestidos, Blusas, Bolsas..."
+          autoComplete="off"
+          className="w-full rounded-lg border border-input bg-card px-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/60 outline-none transition-colors focus:border-rosa"
+        />
+        <datalist id="category-list">
+          {categories.map((c) => (
+            <option key={c.id} value={c.name} />
+          ))}
+        </datalist>
+        {categoryInput.trim() &&
+          !categories.some(
+            (c) => c.name.toLowerCase() === categoryInput.trim().toLowerCase()
+          ) && (
+            <p className="text-[11px] text-verde-agua font-medium">
+              ✦ Nova categoria &quot;{categoryInput.trim()}&quot; será criada
+            </p>
+          )}
+      </div>
 
       <div className="grid grid-cols-2 gap-3">
         <Input

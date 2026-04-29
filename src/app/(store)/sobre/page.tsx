@@ -1,6 +1,6 @@
-import { Flower2, MapPin, Clock, CreditCard } from "lucide-react";
 import { STORE } from "@/lib/constants";
 import { getStoreSettings } from "@/lib/data/settings";
+import { AboutSection } from "@/components/store/about-section";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -9,49 +9,51 @@ export const metadata: Metadata = {
 };
 
 export default async function SobrePage() {
-  const settings = await getStoreSettings();
+  const settings = await getStoreSettings().catch(() => null);
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-12">
-      <div className="text-center">
-        <Flower2 className="mx-auto mb-4 h-10 w-10 text-rosa-claro" />
-        <h1 className="font-display text-3xl text-foreground">
-          {STORE.name}
-        </h1>
-        <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-          {settings.bio}
-        </p>
+    <>
+      <AboutSection
+        bio={settings?.bio}
+        address={settings?.address}
+        hours={settings?.hours}
+        payment={settings?.payment}
+      />
+
+      {/* Informações práticas */}
+      <div className="px-14 py-10 max-md:px-5 max-md:py-8" style={{ background: "#FAF0E8" }}>
+        <div className="mx-auto grid max-w-3xl gap-4 md:grid-cols-3">
+          {[
+            {
+              icon: "📍",
+              title: "Endereço",
+              value: settings?.address || STORE.address,
+            },
+            {
+              icon: "🕐",
+              title: "Horário",
+              value: settings?.hours || STORE.hours,
+            },
+            {
+              icon: "💳",
+              title: "Pagamento",
+              value: settings?.payment || "Cartão de crédito, débito e Pix",
+            },
+          ].map((item) => (
+            <div
+              key={item.title}
+              className="flex flex-col items-center gap-3 rounded-2xl p-8 text-center"
+              style={{ background: "#fff", boxShadow: "0 2px 10px rgba(180,100,80,0.07)" }}
+            >
+              <span className="text-[28px]">{item.icon}</span>
+              <div>
+                <h3 className="font-display text-[15px] text-foreground mb-2">{item.title}</h3>
+                <p className="font-body text-[13px] text-[#8a6a60] leading-relaxed">{item.value}</p>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
-
-      <div className="mt-12 grid gap-6 sm:grid-cols-3">
-        <div className="flex flex-col items-center gap-3 rounded-xl border border-border bg-card p-6 text-center">
-          <MapPin className="h-6 w-6 text-teal" />
-          <div>
-            <h3 className="text-sm font-medium text-foreground">Endereço</h3>
-            <p className="mt-1 text-xs text-muted-foreground">
-              {settings.address}
-            </p>
-          </div>
-        </div>
-
-        <div className="flex flex-col items-center gap-3 rounded-xl border border-border bg-card p-6 text-center">
-          <Clock className="h-6 w-6 text-teal" />
-          <div>
-            <h3 className="text-sm font-medium text-foreground">Horário</h3>
-            <p className="mt-1 text-xs text-muted-foreground">{settings.hours}</p>
-          </div>
-        </div>
-
-        <div className="flex flex-col items-center gap-3 rounded-xl border border-border bg-card p-6 text-center">
-          <CreditCard className="h-6 w-6 text-teal" />
-          <div>
-            <h3 className="text-sm font-medium text-foreground">Pagamento</h3>
-            <p className="mt-1 text-xs text-muted-foreground">
-              {settings.payment}
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
+    </>
   );
 }

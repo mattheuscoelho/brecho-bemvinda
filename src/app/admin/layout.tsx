@@ -1,6 +1,5 @@
 import Link from "next/link";
-import { Flower2, Settings } from "lucide-react";
-import { STORE } from "@/lib/constants";
+import { Eye, Settings } from "lucide-react";
 import { AdminLogout } from "./logout-button";
 
 export default function AdminLayout({
@@ -9,30 +8,49 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex min-h-dvh flex-col bg-bege">
-      {/* Header admin — compacto, mobile-first */}
-      <header className="sticky top-0 z-40 border-b border-border bg-card/95 backdrop-blur-sm">
-        <div className="flex h-14 items-center justify-between px-4">
-          <Link href="/admin" className="flex items-center gap-2">
-            <Flower2 className="h-5 w-5 text-rosa" />
-            <span className="font-display text-sm text-rosa">Painel</span>
+    <div className="flex min-h-dvh flex-col" style={{ background: "#f5ede8" }}>
+      {/* Top bar escura */}
+      <header
+        className="sticky top-0 z-40"
+        style={{ background: "#2A1A16" }}
+      >
+        <div className="relative flex items-center justify-center h-14 px-5">
+          {/* Wordmark centralizado */}
+          <Link href="/admin" className="flex flex-col items-center">
+            <span className="font-display text-[9px] uppercase tracking-[2px] text-[#b08880] leading-none">
+              Brechó
+            </span>
+            <span className="font-script text-[22px] text-rosa leading-none" style={{ lineHeight: 0.9 }}>
+              Bemvinda Poesia
+            </span>
+            <span className="font-display italic text-[9px] text-[#b08880] leading-none" style={{ marginTop: "2px" }}>
+              & Cia.
+            </span>
           </Link>
 
-          <div className="flex items-center gap-3">
-            <Link
-              href="/admin/configuracoes"
-              className="text-muted-foreground hover:text-foreground transition-colors"
-              aria-label="Configurações"
-            >
-              <Settings className="h-4 w-4" />
-            </Link>
+          {/* Botões de ação */}
+          <div className="absolute right-5 flex items-center gap-2">
             <Link
               href="/"
-              className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+              target="_blank"
+              className="flex items-center justify-center w-9 h-9 rounded-full transition-colors hover:bg-white/10"
+              aria-label="Ver loja"
             >
-              Ver loja
+              <Eye className="h-4 w-4" style={{ color: "#d4a898" }} />
             </Link>
-            <AdminLogout />
+            <Link
+              href="/admin/configuracoes"
+              className="flex items-center justify-center w-9 h-9 rounded-full transition-colors hover:bg-white/10"
+              aria-label="Configurações"
+            >
+              <Settings className="h-4 w-4" style={{ color: "#d4a898" }} />
+            </Link>
+            <div
+              className="flex items-center px-3 py-1.5 rounded-full text-[12px] font-body text-[#d4a898] cursor-pointer transition-colors hover:bg-white/15"
+              style={{ background: "rgba(255,255,255,0.08)" }}
+            >
+              <AdminLogout />
+            </div>
           </div>
         </div>
       </header>

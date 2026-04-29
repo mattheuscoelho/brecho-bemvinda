@@ -1,112 +1,83 @@
 import { Suspense } from "react";
-import { getCategoriesWithCount } from "@/lib/data/categories";
-import { getProducts } from "@/lib/data/products";
-import { CategoryCard } from "@/components/category-card";
-import { ProductCard } from "@/components/product-card";
-import { Flower2 } from "lucide-react";
-import { STORE } from "@/lib/constants";
+import { getCategories } from "@/lib/data/categories";
+import { getAllProducts } from "@/lib/data/products";
+import { getStoreSettings } from "@/lib/data/settings";
+import { Hero } from "@/components/store/hero";
+import { CatalogClient } from "@/components/store/catalog-client";
+import { AboutSection } from "@/components/store/about-section";
 
-export default function HomePage() {
+export const revalidate = 60;
+
+export default async function HomePage() {
   return (
-    <div className="mx-auto max-w-5xl px-4 py-8">
-      {/* Hero */}
-      <section className="mb-16 py-16 sm:py-24 text-center">
-        <span className="block text-3xl text-rosa-claro select-none mb-6" aria-hidden>✿</span>
-        <h1 className="font-script text-5xl text-foreground sm:text-6xl">
-          {STORE.name}
-        </h1>
-        <p className="mt-5 text-xs uppercase tracking-[0.25em] text-muted-foreground">
-          Peças únicas com história e encanto
-        </p>
-        <p className="mt-3 text-xs text-muted-foreground/60">
-          {STORE.address} · {STORE.hours}
-        </p>
-      </section>
-
-      {/* Categorias */}
-      <section className="mb-12">
-        <h2 className="mb-4 font-display text-xl text-foreground">
-          Categorias
-        </h2>
-        <Suspense
-          fallback={
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <div
-                  key={i}
-                  className="h-16 animate-pulse rounded-xl bg-muted"
-                />
-              ))}
-            </div>
-          }
-        >
-          <CategoriesList />
-        </Suspense>
-      </section>
-
-      {/* Produtos recentes */}
-      <section>
-        <h2 className="mb-4 font-display text-xl text-foreground">
-          Novidades
-        </h2>
-        <Suspense
-          fallback={
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-              {Array.from({ length: 8 }).map((_, i) => (
-                <div
-                  key={i}
-                  className="aspect-square animate-pulse rounded-xl bg-muted"
-                />
-              ))}
-            </div>
-          }
-        >
-          <ProductsList />
-        </Suspense>
-      </section>
-    </div>
+    <>
+      <HeroSection />
+      <Suspense fallback={<CatalogSkeleton />}>
+        <CatalogSection />
+      </Suspense>
+      <Suspense fallback={null}>
+        <AboutSectionWrapper />
+      </Suspense>
+    </>
   );
 }
 
-async function CategoriesList() {
-  const categories = await getCategoriesWithCount();
+async function HeroSection() {
+  const settings = await getStoreSettings().catch(() => null);
+  return <Hero whatsapp={settings?.whatsapp} />;
+}
 
-  if (categories.length === 0) {
-    return (
-      <p className="text-sm text-muted-foreground">
-        Nenhuma categoria cadastrada ainda.
-      </p>
-    );
-  }
+async function CatalogSection() {
+  const [products, categories] = await Promise.all([
+    getAllProducts(),
+    getCategories(),
+  ]);
+
+  const publicProducts = products.map((p) => ({
+    id: p.id,
+    name: p.name,
+    price: p.price,
+    status: p.status,
+    size: p.size,
+    categories: (p as { categories?: { name: string; slug: string } | null }).categories ?? null,
+    product_images: p.product_images,
+  }));
 
   return (
-    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-      {categories.map((cat) => (
-        <CategoryCard key={cat.id} category={cat} count={cat.count} />
-      ))}
-    </div>
+    <CatalogClient
+      products={publicProducts}
+      categories={categories}
+    />
   );
 }
 
-async function ProductsList() {
-  const products = await getProducts();
+async function AboutSectionWrapper() {
+  const settings = await getStoreSettings().catch(() => null);
+  return (
+    <AboutSection
+      bio={settings?.bio}
+      address={settings?.address}
+      hours={settings?.hours}
+      payment={settings?.payment}
+    />
+  );
+}
 
-  if (products.length === 0) {
-    return (
-      <div className="rounded-xl border border-dashed border-border bg-card p-12 text-center">
-        <Flower2 className="mx-auto mb-3 h-8 w-8 text-rosa-claro/50" />
-        <p className="text-sm text-muted-foreground">
-          Em breve novas peças por aqui!
-        </p>
+function CatalogSkeleton() {
+  return (
+    <div>
+      {/* Filter skeleton */}
+      <div className="flex gap-2 justify-center px-14 py-[14px]" style={{ background: "#F2B8B0" }}>
+        {Array.from({ length: 5 }).map((_, i) => (
+          <div key={i} className="h-8 w-20 rounded-[20px] animate-pulse bg-[#e8a8a0]" />
+        ))}
       </div>
-    );
-  }
-
-  return (
-    <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-      {products.map((product) => (
-        <ProductCard key={product.id} product={product} />
-      ))}
+      {/* Grid skeleton */}
+      <div className="grid gap-[1px] bg-[#ddd0c8]" style={{ gridTemplateColumns: "repeat(4, 1fr)" }}>
+        {Array.from({ length: 8 }).map((_, i) => (
+          <div key={i} className="bg-white aspect-[3/4] animate-pulse" style={{ opacity: 0.6 }} />
+        ))}
+      </div>
     </div>
   );
 }

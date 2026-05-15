@@ -3,8 +3,8 @@ export const STORE = {
   tagline: "Brechó",
   address: "Rua Ipiranga, 18 — Centro",
   hours: "Seg a Sex, 10h às 17h",
-  phone: "5511915703530",
-  whatsapp: "5511915703530",
+  phone: "5511926361869",
+  whatsapp: "5511926361869",
   instagram: "@bemvindapoesia",
 } as const;
 

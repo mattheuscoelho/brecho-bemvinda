@@ -1,0 +1,23 @@
+name: Supabase Keep Alive
+
+on:
+  schedule:
+    - cron: "0 12 * * 1,4"  # toda segunda e quinta ao meio-dia UTC
+  workflow_dispatch:          # permite rodar manualmente
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase
+        run: |
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" \
+            https://zocllfbityzgmjhkiizt.supabase.co/rest/v1/)
+          echo "Status: $STATUS"
+          if [ "$STATUS" != "200" ] && [ "$STATUS" != "404" ]; then
+            echo "Projeto pode estar pausado ou com problema (status $STATUS)"
+            exit 1
+          fi
+          echo "Projeto ativo."

@@ -29,7 +29,7 @@ jobs:
           RESPONSE=$(curl -s -w "\n%{http_code}" \
             -H "apikey: $SUPABASE_ANON_KEY" \
             -H "Authorization: Bearer $SUPABASE_ANON_KEY" \
-            "$SUPABASE_URL/rest/v1/products?select=id&limit=1")
+            "$SUPABASE_URL/rest/v1/products?select=id&limit=1" || echo -e "\n000")
 
           BODY=$(echo "$RESPONSE" | head -n -1)
           STATUS=$(echo "$RESPONSE" | tail -n 1)
@@ -79,7 +79,7 @@ jobs:
             STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 10 \
               -H "apikey: $SUPABASE_ANON_KEY" \
               -H "Authorization: Bearer $SUPABASE_ANON_KEY" \
-              "$SUPABASE_URL/rest/v1/products?select=id&limit=1")
+              "$SUPABASE_URL/rest/v1/products?select=id&limit=1" || echo "000")
             echo "Tentativa $i: HTTP $STATUS"
             if [ "$STATUS" = "200" ]; then
               echo "Projeto restaurado e banco respondendo."
